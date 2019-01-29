@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    ports:
+      - 3306:3306
+    volumes:
+      - ./conf.d:/etc/mysql/conf.d
+
+  compiler:
+    image: maven:3.6.0-jdk-11
+    volumes:
+      - ./initial:/app
+    command: bash
+    stdin_open: true
+    tty: true
