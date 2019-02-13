@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="zh-Hant">
+	<head>
+		<head th:include="fragments/layout :: head (#{application.name})" th:remove="tag"/>
+		<link href="../../static/css/signin.css" rel="stylesheet" th:href="@{/css/signin.css}"/>
+	</head>
+<body>
+	<div class="container">
+
+      <form class="form-signin" th:action="@{/login}" method="post">
+        <h2 class="form-signin-heading" th:text="#{page.login.name}">Please sign in</h2>
+        <label for="username" class="sr-only" th:text="#{page.login.username}">username</label>
+        <input type="text" id="username" name="username" class="form-control" th:placeholder="#{page.login.username}" required="required" autofocus="autofocus" />
+        <label for="inputPassword" class="sr-only" th:text="#{page.login.password}">Password</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" th:placeholder="#{page.login.password}" required="required" />
+        <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{page.general.login}">Sign in</button>
+        <p style="margin: 10px 0 10px;font-size: 1.2em;" th:if="${loginError}" class="text-danger"><strong th:text="#{page.login.wrongUserPassword}">Wrong user or password</strong></p>
+      </form>
+      
+    </div> <!-- /container -->
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/js/lang.js}"></script>
+</body>
+</html>
