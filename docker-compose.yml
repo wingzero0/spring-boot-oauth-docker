@@ -10,12 +10,22 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./conf.d:/etc/mysql/conf.d
+      - ./mariadb/conf.d:/etc/mysql/conf.d
+      - ./mariadb/script/:/app/
+    working_dir: /app/
+    #command: ['mysql', '-u', 'root', '-pexample' , '<', 'schema.sql']
+    #command: mysql -u root -pexample < schema.sql
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8120:8080
 
   compiler:
     image: maven:3.6.0-jdk-11
     volumes:
-      - ./initial:/app
+      - ./ssoserver:/app
     command: bash
     stdin_open: true
     tty: true
