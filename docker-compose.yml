@@ -11,7 +11,7 @@ services:
       - 3306:3306
     volumes:
       - ./mariadb/conf.d:/etc/mysql/conf.d
-      - ./mariadb/script/:/app/
+      - ./mariadb/script/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     working_dir: /app/
     #command: ['mysql', '-u', 'root', '-pexample' , '<', 'schema.sql']
     #command: mysql -u root -pexample < schema.sql
@@ -26,6 +26,8 @@ services:
     image: maven:3.6.0-jdk-11
     volumes:
       - ./ssoserver:/app
+      - ./.m2/:/root/.m2/
     command: bash
     stdin_open: true
     tty: true
+    working_dir: /app/
