@@ -17,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private RoleRepository roleRepository;
     private SubstituicaoRoleRepository substituicaoRoleRepository;
 
+    @Override
+    @Transactional(readOnly = true)
+    public User loadUserByUsername(String staffNo) throws UsernameNotFoundException {
+			Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			return new User("john", encoder.encode("123"), grantedAuthorities);
+		}
+/*
     @Override
     @Transactional(readOnly = true)
     public User loadUserByUsername(String staffNo) throws UsernameNotFoundException {
@@ -55,7 +64,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         gps.setPasswd(null);
         return new GPSUser(gps.getFuncNo().toString(), password, grantedAuthorities, gps);
     }
-
+*/
     @Autowired
     public void setUserRepository(GPSRepository userRepository) {
         this.userRepository = userRepository;
