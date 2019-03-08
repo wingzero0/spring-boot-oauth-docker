@@ -5,7 +5,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class User {
+public class AppUser {
     @Id
     private Integer id;
     private String username;

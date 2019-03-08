@@ -1,14 +1,12 @@
 package kit.personal.ssoserver;
 
-import kit.personal.ssoserver.entity.GPS;
-import kit.personal.ssoserver.entity.GPSEmail;
+import kit.personal.ssoserver.entity.AppUser;
 import kit.personal.ssoserver.entity.Role;
 import kit.personal.ssoserver.entity.SubstituicaoRole;
-import kit.personal.ssoserver.repo.GPSRepository;
+import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.RoleRepository;
 import kit.personal.ssoserver.repo.SubstituicaoRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -28,7 +26,7 @@ public class UserController {
     @Autowired
     SubstituicaoRoleRepository substituicaoRoleRepository;
     @Autowired
-    GPSRepository gpsRepository;
+    AppUserRepository appUserRepository;
 
     @GetMapping("/user/me")
     @ResponseBody
@@ -58,9 +56,9 @@ public class UserController {
 
     @GetMapping("/user/info")
     @ResponseBody
-    public GPS info(Principal principal) {
-        GPS gps = gpsRepository.findOneByFuncNo(Integer.valueOf(principal.getName()));
-        gps.setPasswd(null);
+    public AppUser info(Principal principal) {
+        AppUser gps = appUserRepository.findOneByFuncNo(Integer.valueOf(principal.getName()));
+        gps.setPassword(null);
         return gps;
     }
 

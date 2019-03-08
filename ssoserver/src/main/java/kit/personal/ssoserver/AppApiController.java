@@ -1,10 +1,10 @@
 package kit.personal.ssoserver;
 
-import kit.personal.ssoserver.entity.GPS;
+import kit.personal.ssoserver.entity.AppUser;
 import kit.personal.ssoserver.entity.GPSEmail;
 import kit.personal.ssoserver.entity.Role;
 import kit.personal.ssoserver.entity.SubstituicaoRole;
-import kit.personal.ssoserver.repo.GPSRepository;
+import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.RoleRepository;
 import kit.personal.ssoserver.repo.SubstituicaoRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class AppApiController {
     @Autowired
     SubstituicaoRoleRepository substituicaoRoleRepository;
     @Autowired
-    GPSRepository gpsRepository;
+    AppUserRepository appUserRepository;
 
 
     @GetMapping("/app/fullUserList")
@@ -100,7 +100,7 @@ public class AppApiController {
     @GetMapping("/app/usersWithRole/{roleName}")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
-    public Iterable<GPS> offlineUsersOfRole(Principal principal, @PathVariable String roleName) {
+    public Iterable<AppUser> offlineUsersOfRole(Principal principal, @PathVariable String roleName) {
         Iterable<Role> roleList = roleRepository.findAllByAppAndRole(principal.getName(), roleName);
         Set<Integer> funcNos = new HashSet<>();
         for(Role role:roleList){
@@ -110,9 +110,9 @@ public class AppApiController {
         for (SubstituicaoRole substituicaoRole:substituicaoRoleList){
             funcNos.add(substituicaoRole.getPk().getFuncNo());
         }
-        List<GPS> gpsList = this.gpsRepository.findAllByFuncNoIn(funcNos);
-        for (GPS gps: gpsList){
-            gps.setPasswd(null); // TODO use json serializer instead of set null every time;
+        List<AppUser> gpsList = this.appUserRepository.findAllByFuncNoIn(funcNos);
+        for (AppUser gps: gpsList){
+            gps.setPassword(null); // TODO use json serializer instead of set null every time;
         }
         return gpsList;
     }
@@ -121,7 +121,7 @@ public class AppApiController {
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
     public GPSEmail offlineUserEmail(Principal principal, @PathVariable String funcNo) {
-        GPS gps = this.gpsRepository.findOneByFuncNo(Integer.valueOf(funcNo));
+        AppUser gps = this.appUserRepository.findOneByFuncNo(Integer.valueOf(funcNo));
         if (gps != null){
             return GPSEmail.extractEmail(gps);
         }
@@ -138,17 +138,17 @@ public class AppApiController {
         for (String funcNo : funcNos){
             funcNosInteger.add(Integer.valueOf(funcNo));
         }
-        List<GPS> gpsList = this.gpsRepository.findAllByFuncNoIn(funcNosInteger);
+        List<AppUser> gpsList = this.appUserRepository.findAllByFuncNoIn(funcNosInteger);
         return GPSEmail.extractEmail(gpsList);
     }
 
     @GetMapping("/app/userFuncNo/{email}")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
-    public Integer offlineUserFuncNo(Principal principal, @PathVariable String email) {
-        GPS gps = this.gpsRepository.findOneByEmail(email);
+    public String offlineUsername(Principal principal, @PathVariable String email) {
+        AppUser gps = this.appUserRepository.findOneByEmail(email);
         if (gps != null){
-            return gps.getFuncNo();
+            return gps.getUsername();
         }
         return null;
     }

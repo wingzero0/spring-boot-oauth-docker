@@ -6,17 +6,17 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 public class GPSUser extends User {
-    private GPS gps;
-    public GPSUser(String username, String password, Collection<? extends GrantedAuthority> authorities, GPS gps){
+    private AppUser gps;
+    public GPSUser(String username, String password, Collection<? extends GrantedAuthority> authorities, AppUser gps){
         super(username, password, authorities);
         this.gps = gps;
     }
 
-    public GPS getGps() {
+    public AppUser getGps() {
         return gps;
     }
 
-    public GPSUser setGps(GPS gps) {
+    public GPSUser setGps(AppUser gps) {
         this.gps = gps;
         return this;
     }

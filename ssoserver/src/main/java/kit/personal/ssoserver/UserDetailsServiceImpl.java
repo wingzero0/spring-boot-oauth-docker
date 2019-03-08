@@ -4,16 +4,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import kit.personal.ssoserver.entity.GPS;
-import kit.personal.ssoserver.entity.GPSUser;
-import kit.personal.ssoserver.entity.Role;
-import kit.personal.ssoserver.entity.SubstituicaoRole;
-import kit.personal.ssoserver.repo.GPSRepository;
+import kit.personal.ssoserver.entity.AppUser;
+import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.RoleRepository;
 import kit.personal.ssoserver.repo.SubstituicaoRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private GPSRepository userRepository;
+    private AppUserRepository userRepository;
     private RoleRepository roleRepository;
     private SubstituicaoRoleRepository substituicaoRoleRepository;
 
@@ -66,7 +62,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 */
     @Autowired
-    public void setUserRepository(GPSRepository userRepository) {
+    public void setUserRepository(AppUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
