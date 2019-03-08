@@ -53,6 +53,15 @@ create table oauth_approvals (
 	lastModifiedAt DATETIME
 );
 
+
+create table AppUser (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  username varchar(256) NOT NULL,
+  password varchar(256) NOT NULL,
+  email varchar(256) DEFAULT NULL,
+  PRIMARY KEY (id)
+);
+
 insert into oauth_client_details(client_id, resource_ids, client_secret, scope, authorized_grant_types, authorities, access_token_validity, refresh_token_validity)
  values ('spring-security-oauth2-read-client', 'resource-server-rest-api',
    /*spring-security-oauth2-read-client-password1234*/'$2a$04$WGq2P9egiOYoOFemBRfsiO9qTcyJtNRnPKNBl5tokP7IP.eZn93km',
@@ -63,3 +72,6 @@ insert into oauth_client_details(client_id, resource_ids, client_secret, scope, 
  values ('spring-security-oauth2-read-write-client', 'resource-server-rest-api',
   /*spring-security-oauth2-read-write-client-password1234*/'$2a$04$soeOR.QFmClXeFIrhJVLWOQxfHjsJLSpWrU1iGxcMGdu.a5hvfY4W',
 	 'read,write', 'password,authorization_code,refresh_token,implicit', 'user', 10800, 2592000);
+
+
+INSERT INTO AppUser (id, username, password, email) VALUES (1,	'john',	' $2y$12$ADz6/ylAZ93jcdh34IrbsemuRECacV3upA7p0/LcOTrL0v7o6RpXm',	'test@localhost.com');
