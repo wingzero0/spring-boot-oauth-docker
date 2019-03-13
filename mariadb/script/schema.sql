@@ -82,5 +82,5 @@ insert into oauth_client_details(client_id, resource_ids, client_secret, scope, 
 	 'read,write', 'password,authorization_code,refresh_token,implicit', 'user', 10800, 2592000);
 
 
-INSERT INTO app_user (id, username, password, email) VALUES (1,	'john',	' $2y$12$ADz6/ylAZ93jcdh34IrbsemuRECacV3upA7p0/LcOTrL0v7o6RpXm',	'test@localhost.com');
+INSERT INTO app_user (id, username, password, email) VALUES (1,	'john',	'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y',	'test@localhost.com');
 INSERT INTO app_user_role (id, username, app_id, app_role) VALUES (1, 'john', 'spring-security-oauth2-read-write-client ',  'readonlyclient');
