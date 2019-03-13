@@ -45,20 +45,28 @@ create table oauth_code (
 );
 
 create table oauth_approvals (
-	userId VARCHAR(256),
-	clientId VARCHAR(256),
+	user_id VARCHAR(256),
+	client_id VARCHAR(256),
 	scope VARCHAR(256),
 	status VARCHAR(10),
-	expiresAt DATETIME,
-	lastModifiedAt DATETIME
+	expires_at DATETIME,
+	last_modified_at DATETIME
 );
 
 
-create table AppUser (
+create table app_user (
   id bigint(20) NOT NULL AUTO_INCREMENT,
   username varchar(256) NOT NULL,
   password varchar(256) NOT NULL,
   email varchar(256) DEFAULT NULL,
+  PRIMARY KEY (id)
+);
+
+create table app_user_role(
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  username varchar(256) NOT NULL,
+  app_id varchar(256) NOT NULL,
+  app_role varchar(256) NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -74,4 +82,5 @@ insert into oauth_client_details(client_id, resource_ids, client_secret, scope, 
 	 'read,write', 'password,authorization_code,refresh_token,implicit', 'user', 10800, 2592000);
 
 
-INSERT INTO AppUser (id, username, password, email) VALUES (1,	'john',	' $2y$12$ADz6/ylAZ93jcdh34IrbsemuRECacV3upA7p0/LcOTrL0v7o6RpXm',	'test@localhost.com');
+INSERT INTO app_user (id, username, password, email) VALUES (1,	'john',	' $2y$12$ADz6/ylAZ93jcdh34IrbsemuRECacV3upA7p0/LcOTrL0v7o6RpXm',	'test@localhost.com');
+INSERT INTO app_user_role (id, username, app_id, app_role) VALUES (1, 'john', 'spring-security-oauth2-read-write-client ',  'readonlyclient');

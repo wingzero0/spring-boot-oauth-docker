@@ -172,7 +172,7 @@ on e.func_no = g.func_no
 --------------------------------------------------------
 
   CREATE OR REPLACE FORCE VIEW "SUBSTITUICAO_ROLE" ("FUNC_NO", "INICIO", "FIM", "NO_CHEFE", "APP", "ROLE") AS
-  select s.func_no, s.INICIO, s.fim, s.NO_CHEFE, extendrole.app, extendrole.role from
+  select s.func_no, s.INICIO, s.fim, s.NO_CHEFE, extendrole.appId, extendrole.role from
 (select r.* from role r
 where func_no in (
 select no_chefe from substituicao s where trunc(sysdate,'DDD') between s.INICIO and s.FIM

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface AppUserRepository extends CrudRepository<AppUser, Integer> {
-    AppUser findOneByFuncNo(Integer funcNo);
+    AppUser findOneByUsername(String username);
     AppUser findOneByEmail(String email);
-    List<AppUser> findAllByFuncNoIn(Collection<Integer> funcNos);
+    List<AppUser> findAllByUsernameIn(Collection<String> usernames);
 }

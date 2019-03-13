@@ -2,12 +2,14 @@ package kit.personal.ssoserver.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
+import java.math.BigInteger;
 
 
 @Entity
-public class AppUser {
+public class AppUser implements Serializable {
     @Id
-    private Integer id;
+    private BigInteger id;
     private String username;
     private String password;
     private String email;
@@ -17,7 +19,7 @@ public class AppUser {
      *
      * @return id as Integer.
      */
-    public Integer getId()
+    public BigInteger getId()
     {
         return id;
     }
@@ -27,7 +29,7 @@ public class AppUser {
      *
      * @param id the value to set.
      */
-    public void setId(Integer id)
+    public void setId(BigInteger id)
     {
         this.id = id;
     }
