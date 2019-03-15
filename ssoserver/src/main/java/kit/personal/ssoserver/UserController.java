@@ -1,14 +1,11 @@
 package kit.personal.ssoserver;
 
-import kit.personal.ssoserver.entity.GPS;
-import kit.personal.ssoserver.entity.GPSEmail;
-import kit.personal.ssoserver.entity.Role;
-import kit.personal.ssoserver.entity.SubstituicaoRole;
-import kit.personal.ssoserver.repo.GPSRepository;
-import kit.personal.ssoserver.repo.RoleRepository;
+import kit.personal.ssoserver.entity.AppUser;
+import kit.personal.ssoserver.entity.AppUserRole;
+import kit.personal.ssoserver.repo.AppUserRepository;
+import kit.personal.ssoserver.repo.AppUserRoleRepository;
 import kit.personal.ssoserver.repo.SubstituicaoRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -24,11 +21,11 @@ import java.util.*;
 @Controller
 public class UserController {
     @Autowired
-    RoleRepository roleRepository;
+    AppUserRoleRepository roleRepository;
     @Autowired
     SubstituicaoRoleRepository substituicaoRoleRepository;
     @Autowired
-    GPSRepository gpsRepository;
+    AppUserRepository appUserRepository;
 
     @GetMapping("/user/me")
     @ResponseBody
@@ -41,27 +38,32 @@ public class UserController {
     public Set<String> role(Principal principal) {
         OAuth2Authentication authen = (OAuth2Authentication) principal;
         String appId = authen.getOAuth2Request().getClientId();
-        Integer funcNo = Integer.valueOf(principal.getName());
-        List<SubstituicaoRole> extendRoleList = substituicaoRoleRepository.findAllByAppAndPkFuncNo(appId, funcNo);
-
+        String username = principal.getName();
         Set<String> roles = new HashSet<String>();
-        for (SubstituicaoRole role : extendRoleList){
-            roles.add("ROLE_" + role.getApp() + "_" + role.getRole());
-        }
+        /*
+        List<SubstituicaoRole> extendRoleList = substituicaoRoleRepository.findAllByAppAndPkFuncNo(appId, funcNo);
+         */
 
-        List<Role> originalRoleList = roleRepository.findAllByAppAndFuncNo(appId, funcNo);
-        for (Role role : originalRoleList){
-            roles.add("ROLE_" + role.getApp() + "_" + role.getRole());
+        /*
+
+        for (SubstituicaoRole role : extendRoleList){
+            roles.add("ROLE_" + role.getApp() + "_" + role.getAppRole());
+        }
+        */
+
+        List<AppUserRole> originalRoleList = roleRepository.findAllByAppIdAndUsername(appId, username);
+        for (AppUserRole role : originalRoleList){
+            roles.add("ROLE_" + role.getAppId() + "_" + role.getAppRole());
         }
         return roles;
     }
 
     @GetMapping("/user/info")
     @ResponseBody
-    public GPS info(Principal principal) {
-        GPS gps = gpsRepository.findOneByFuncNo(Integer.valueOf(principal.getName()));
-        gps.setPasswd(null);
-        return gps;
+    public AppUser info(Principal principal) {
+        AppUser appUser = appUserRepository.findOneByUsername(principal.getName());
+        appUser.setPassword(null);
+        return appUser;
     }
 
 

@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GPSEmail {
-    private Integer funcNo;
+    private String funcNo;
     private String email;
-    public static GPSEmail extractEmail(GPS gps){
+    public static GPSEmail extractEmail(AppUser gps){
         GPSEmail gpsEmail = new GPSEmail();
-        gpsEmail.setFuncNo(gps.getFuncNo());
+        gpsEmail.setFuncNo(gps.getUsername());
         gpsEmail.setEmail(gps.getEmail());
         return gpsEmail;
     }
 
-    public static List<GPSEmail> extractEmail(List<GPS> gpsList){
+    public static List<GPSEmail> extractEmail(List<AppUser> gpsList){
         List<GPSEmail> gpsEmailList = new ArrayList<>();
-        for (GPS gps: gpsList){
+        for (AppUser gps: gpsList){
             gpsEmailList.add(extractEmail(gps));
         }
         return gpsEmailList;
     }
 
-    public Integer getFuncNo() {
+    public String getFuncNo() {
         return funcNo;
     }
 
-    public GPSEmail setFuncNo(Integer funcNo) {
+    public GPSEmail setFuncNo(String funcNo) {
         this.funcNo = funcNo;
         return this;
     }
