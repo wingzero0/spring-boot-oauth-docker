@@ -9,7 +9,7 @@ import kit.personal.ssoserver.entity.AppUserRole;
 import kit.personal.ssoserver.entity.AuthUserAdapter;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
-import kit.personal.ssoserver.repo.SubstituicaoRoleRepository;
+import kit.personal.ssoserver.repo.ActingRoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private AppUserRepository userRepository;
     private AppUserRoleRepository roleRepository;
-    private SubstituicaoRoleRepository substituicaoRoleRepository;
+    private ActingRoleRepository actingRoleRepository;
     private static Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     /*
@@ -53,8 +52,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
         }
 //
-//        List<SubstituicaoRole> extendRoleList = substituicaoRoleRepository.findAllByPkFuncNo(Integer.valueOf(staffNo));
-//        for (SubstituicaoRole role : extendRoleList){
+//        List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkFuncNo(Integer.valueOf(staffNo));
+//        for (ActingRole role : extendRoleList){
 //            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
 //        }
 //
@@ -84,8 +83,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Autowired
-    public UserDetailsServiceImpl setSubstituicaoRoleRepository(SubstituicaoRoleRepository substituicaoRoleRepository) {
-        this.substituicaoRoleRepository = substituicaoRoleRepository;
+    public UserDetailsServiceImpl setActingRoleRepository(ActingRoleRepository actingRoleRepository) {
+        this.actingRoleRepository = actingRoleRepository;
         return this;
     }
 }

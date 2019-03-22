@@ -5,12 +5,16 @@ import kit.personal.ssoserver.entity.AppUserRole;
 import kit.personal.ssoserver.entity.GPSEmail;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
-import kit.personal.ssoserver.repo.SubstituicaoRoleRepository;
+import kit.personal.ssoserver.repo.ActingRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
@@ -20,7 +24,7 @@ public class AppApiController {
     @Autowired
     AppUserRoleRepository roleRepository;
     @Autowired
-    SubstituicaoRoleRepository substituicaoRoleRepository;
+    ActingRoleRepository actingRoleRepository;
     @Autowired
     AppUserRepository appUserRepository;
 
@@ -30,11 +34,11 @@ public class AppApiController {
     @ResponseBody
     public Iterable<AppUserRole> offlineRole(Principal principal) {
         Iterable<AppUserRole> roleList = roleRepository.findAllByAppId(principal.getName());
-        // TODO search user by substituicaoRoleRepository too;
+        // TODO search user by actingRoleRepository too;
         // TODO add a new return type which combine role and substituicao role
         return roleList;
     }
-    /*
+
     @GetMapping("/app/fullUserListPaging")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
@@ -44,12 +48,12 @@ public class AppApiController {
     ) {
         int pageNum = Integer.valueOf(page);
         int limitNum = Integer.valueOf(limit);
-        Sort sort = new Sort(Sort.Direction.DESC, "funcNo");
+        Sort sort = new Sort(Sort.Direction.DESC, "username");
 
-        Page<AppUserRole> roleList = roleRepository.findAllByApp(principal.getName(), PageRequest.of(pageNum, limitNum, sort));
+        Page<AppUserRole> roleList = roleRepository.findAllByAppId(principal.getName(), PageRequest.of(pageNum, limitNum, sort));
         return roleList;
     }
-
+    /*
     @GetMapping("/app/addUserRole")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
@@ -100,8 +104,8 @@ public class AppApiController {
         for(AppUserRole role:roleList){
             funcNos.add(role.getUsername());
         }
-        Iterable<SubstituicaoRole> substituicaoRoleList = substituicaoRoleRepository.findAllByAppAndRole(principal.getName(), roleName);
-        for (SubstituicaoRole substituicaoRole:substituicaoRoleList){
+        Iterable<ActingRole> substituicaoRoleList = actingRoleRepository.findAllByAppAndRole(principal.getName(), roleName);
+        for (ActingRole substituicaoRole:substituicaoRoleList){
             funcNos.add(substituicaoRole.getPk().getFuncNo());
         }
         List<AppUser> gpsList = this.appUserRepository.findAllByFuncNoIn(funcNos);

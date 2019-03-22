@@ -4,7 +4,7 @@ import kit.personal.ssoserver.entity.AppUser;
 import kit.personal.ssoserver.entity.AppUserRole;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
-import kit.personal.ssoserver.repo.SubstituicaoRoleRepository;
+import kit.personal.ssoserver.repo.ActingRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     AppUserRoleRepository roleRepository;
     @Autowired
-    SubstituicaoRoleRepository substituicaoRoleRepository;
+    ActingRoleRepository actingRoleRepository;
     @Autowired
     AppUserRepository appUserRepository;
 
@@ -41,12 +41,12 @@ public class UserController {
         String username = principal.getName();
         Set<String> roles = new HashSet<String>();
         /*
-        List<SubstituicaoRole> extendRoleList = substituicaoRoleRepository.findAllByAppAndPkFuncNo(appId, funcNo);
+        List<ActingRole> extendRoleList = actingRoleRepository.findAllByAppAndPkFuncNo(appId, funcNo);
          */
 
         /*
 
-        for (SubstituicaoRole role : extendRoleList){
+        for (ActingRole role : extendRoleList){
             roles.add("ROLE_" + role.getApp() + "_" + role.getAppRole());
         }
         */
