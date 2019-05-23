@@ -26,7 +26,7 @@ services:
     image: maven-xserver # or maven:3.6.0-jdk-11 if you run without IDE
     volumes:
       - ./:/root/ide
-      - mavendata:/root/.m2Z
+      - mavendata:/root/.m2:Z
       - appdata:/root/app:Z
     ports:
       - 8080:8080
