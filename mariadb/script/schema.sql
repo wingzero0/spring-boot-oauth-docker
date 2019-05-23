@@ -70,6 +70,15 @@ create table app_user_role(
   PRIMARY KEY (id)
 );
 
+create table app_user_acting (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  from_date datetime NOT NULL,
+  to_date datetime NOT NULL,
+  username varchar(256) NOT NULL,
+  acting_for_username varchar(256) NOT NULL,
+  PRIMARY KEY (id)
+);
+
 insert into oauth_client_details(client_id, resource_ids, client_secret, scope, authorized_grant_types, authorities, access_token_validity, refresh_token_validity)
  values ('spring-security-oauth2-read-client', 'resource-server-rest-api',
    /*spring-security-oauth2-read-client-password1234*/'$2a$04$WGq2P9egiOYoOFemBRfsiO9qTcyJtNRnPKNBl5tokP7IP.eZn93km',
@@ -79,8 +88,15 @@ insert into oauth_client_details(client_id, resource_ids, client_secret, scope, 
 insert into oauth_client_details(client_id, resource_ids, client_secret, scope, authorized_grant_types, authorities, access_token_validity, refresh_token_validity)
  values ('spring-security-oauth2-read-write-client', 'resource-server-rest-api',
   /*spring-security-oauth2-read-write-client-password1234*/'$2a$04$soeOR.QFmClXeFIrhJVLWOQxfHjsJLSpWrU1iGxcMGdu.a5hvfY4W',
-	 'read,write', 'password,authorization_code,refresh_token,implicit', 'user', 10800, 2592000);
+	 'read,write,full_user_list', 'password,authorization_code,refresh_token,implicit,client_credentials', 'user', 10800, 2592000);
 
 
 INSERT INTO app_user (id, username, password, email) VALUES (1,	'john',	'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y',	'test@localhost.com');
-INSERT INTO app_user_role (id, username, app_id, app_role) VALUES (1, 'john', 'spring-security-oauth2-read-write-client ',  'readonlyclient');
+INSERT INTO app_user (id, username, password, email) VALUES (2, 'john2', '$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y', 'test2@localhost.com');
+INSERT INTO app_user_role (id, username, app_id, app_role) VALUES (1, 'john', 'spring-security-oauth2-read-write-client',  'readonlyclient');
+INSERT INTO app_user_acting (id, from_date, to_date, username, acting_for_username) VALUES (1, '2019-03-22 00:00:00',  '2019-04-22 23:59:59',  'john2',  'john');
+
+create view acting_role as
+select acting.from_date, acting.to_date, acting.username, acting.acting_for_username, app_user_role.app_id, app_user_role.app_role
+from app_user_acting acting, app_user_role
+where acting.acting_for_username = app_user_role.username

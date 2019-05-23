@@ -23,14 +23,23 @@ services:
       - 8120:8080
 
   compiler:
-    image: maven:3.6.0-jdk-11
+    image: maven-xserver # or maven:3.6.0-jdk-11 if you run without IDE
     volumes:
-      - ./ssoserver:/app
-      - ./.m2/:/root/.m2/
+      - ./:/root/ide
+      - mavendata:/root/.m2:Z
+      - appdata:/root/app:Z
     ports:
       - 8080:8080
       - 8081:8081
     command: bash
     stdin_open: true
     tty: true
-    working_dir: /app/
+    working_dir: /root/ide
+
+volumes:
+  mavendata:
+    external:
+      name: java_mavendata
+  appdata:
+    external:
+      name: java_workplace
