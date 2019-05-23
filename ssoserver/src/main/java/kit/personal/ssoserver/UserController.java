@@ -7,10 +7,15 @@ import kit.personal.ssoserver.repo.AppUserRoleRepository;
 import kit.personal.ssoserver.repo.ActingRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +31,8 @@ public class UserController {
     ActingRoleRepository actingRoleRepository;
     @Autowired
     AppUserRepository appUserRepository;
+    @Autowired
+    DefaultTokenServices defaultTokenServices;
 
     @GetMapping("/user/me")
     @ResponseBody
@@ -66,6 +73,20 @@ public class UserController {
         return appUser;
     }
 
+    @RequestMapping(value = "/user/revoke", method = RequestMethod.POST)
+    @ResponseBody
+    public String reovkeAccessToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        Pattern r = Pattern.compile("Bearer(\\s*)(.*)");
+        Matcher m = r.matcher(authHeader);
+
+        if (m.find()){
+            defaultTokenServices.revokeToken(m.group(2));
+            return "removing:" + m.group(2);
+        }
+
+        return "Bearer token not found";
+    }
 
 
     @GetMapping("/login")
