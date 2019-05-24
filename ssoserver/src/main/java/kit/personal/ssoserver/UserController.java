@@ -1,27 +1,28 @@
 package kit.personal.ssoserver;
 
+import kit.personal.ssoserver.entity.ActingRole;
 import kit.personal.ssoserver.entity.AppUser;
 import kit.personal.ssoserver.entity.AppUserRole;
+import kit.personal.ssoserver.repo.ActingRoleRepository;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
-import kit.personal.ssoserver.repo.ActingRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 public class UserController {
@@ -46,17 +47,14 @@ public class UserController {
         OAuth2Authentication authen = (OAuth2Authentication) principal;
         String appId = authen.getOAuth2Request().getClientId();
         String username = principal.getName();
-        Set<String> roles = new HashSet<String>();
-        /*
-        List<ActingRole> extendRoleList = actingRoleRepository.findAllByAppAndPkFuncNo(appId, funcNo);
-         */
+        Set<String> roles = new HashSet<>();
 
-        /*
+        List<ActingRole> extendRoleList = actingRoleRepository.findAllByAppIdAndPkUsername(appId, username);
+
 
         for (ActingRole role : extendRoleList){
-            roles.add("ROLE_" + role.getApp() + "_" + role.getAppRole());
+            roles.add("ROLE_" + role.getAppId() + "_" + role.getAppRole());
         }
-        */
 
         List<AppUserRole> originalRoleList = roleRepository.findAllByAppIdAndUsername(appId, username);
         for (AppUserRole role : originalRoleList){

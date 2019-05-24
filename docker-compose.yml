@@ -25,7 +25,7 @@ services:
   compiler:
     image: maven-xserver # or maven:3.6.0-jdk-11 if you run without IDE
     volumes:
-      - ./:/root/ide
+      - ./:/root/external
       - mavendata:/root/.m2:Z
       - appdata:/root/app:Z
     ports:
@@ -34,7 +34,7 @@ services:
     command: bash
     stdin_open: true
     tty: true
-    working_dir: /root/ide
+    working_dir: /root/app
 
 volumes:
   mavendata:
@@ -43,3 +43,7 @@ volumes:
   appdata:
     external:
       name: java_workplace
+
+#in powershell
+# set-variable -name DISPLAY -value 10.61.110.225:0.0
+#docker exec -it -e DISPLAY=$DISPLAY opencvtest_compiler_1 bash

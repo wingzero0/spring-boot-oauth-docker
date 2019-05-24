@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import kit.personal.ssoserver.entity.ActingRole;
 import kit.personal.ssoserver.entity.AppUser;
 import kit.personal.ssoserver.entity.AppUserRole;
 import kit.personal.ssoserver.entity.AuthUserAdapter;
@@ -51,22 +52,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         for (AppUserRole role : roleList){
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
         }
-//
-//        List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkFuncNo(Integer.valueOf(staffNo));
-//        for (ActingRole role : extendRoleList){
-//            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
-//        }
-//
+
+       List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkUsername(username);
+       for (ActingRole role : extendRoleList){
+           grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
+       }
+
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         String password = appUser.getPassword();
         LOG.warn(password);
 
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        LOG.warn(encoder.encode("456"));
-//        return new User(appUser.getUsername(), encoder.encode("456"), grantedAuthorities);
-
-        //return new User(appUser.getUsername(), appUser.getPassword(), grantedAuthorities);
         appUser.setPassword(null);
         return new AuthUserAdapter(appUser.getUsername(), password, grantedAuthorities, appUser);
     }
