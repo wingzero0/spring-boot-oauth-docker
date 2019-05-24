@@ -11,6 +11,14 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpClient.Redirect;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.net.URI;
+import java.time.Duration;
 
 @Controller
 public class HomeController{
@@ -23,6 +31,29 @@ public class HomeController{
     public String index() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getPrincipal().getClass().toGenericString() + "--------" + auth.getPrincipal().toString();
+    }
+
+    @GetMapping("/useriaslogout")
+    @ResponseBody
+    public String useriaslogout(OAuth2AuthenticationToken authentication) {
+        OAuth2AuthorizedClient authorizedClient = this.getAuthorizedClient(authentication);
+        String ret = "token:" + authorizedClient.getAccessToken().getTokenValue();
+        HttpClient client = HttpClient.newBuilder()
+            .followRedirects(Redirect.NORMAL)
+            .connectTimeout(Duration.ofSeconds(20))
+            .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:8081/auth/user/revoke"))
+            .timeout(Duration.ofMinutes(2))
+            .header("Authorization", "Bearer " + authorizedClient.getAccessToken().getTokenValue())
+            .POST(BodyPublishers.ofString(""))
+            .build();
+        client.sendAsync(request, BodyHandlers.ofString())
+            .thenApply(HttpResponse::body)
+            .thenAccept(System.out::println);
+        // TODO clean session here
+        return ret;
     }
 
     @GetMapping("/userinfo")
