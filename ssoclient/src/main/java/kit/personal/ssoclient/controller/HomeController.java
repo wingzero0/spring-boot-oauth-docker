@@ -13,7 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -41,8 +44,8 @@ public class HomeController{
         return "loginPage";
     }
 
-    @GetMapping("/useriaslogout")
-    public String useriaslogout(OAuth2AuthenticationToken authentication, HttpServletRequest logoutRequest) {
+    @GetMapping("/logoutPage")
+    public void revokeToken(OAuth2AuthenticationToken authentication, HttpServletRequest logoutRequest, HttpServletResponse response) {
         OAuth2AuthorizedClient authorizedClient = this.getAuthorizedClient(authentication);
         String ret = "token:" + authorizedClient.getAccessToken().getTokenValue();
         HttpClient client = HttpClient.newBuilder()
@@ -59,9 +62,24 @@ public class HomeController{
         client.sendAsync(request, BodyHandlers.ofString())
             .thenApply(HttpResponse::body)
             .thenAccept(System.out::println);
-        new SecurityContextLogoutHandler().logout(logoutRequest, null, null);
-        // TODO clean session here
-        return "redirect:/logout";
+
+        try {
+            logoutRequest.logout();
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+        try {
+            response.sendRedirect("http://localhost:8081/auth/exit");
+            return;
+        } catch (IOException e){
+            e.printStackTrace();
+            try{
+                response.sendRedirect("/");
+            } catch (IOException secondE ){
+                secondE.printStackTrace();
+            }
+            return;
+        }
     }
 
     @GetMapping("/userinfo")

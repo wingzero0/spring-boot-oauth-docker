@@ -6,6 +6,8 @@ import kit.personal.ssoserver.entity.AppUserRole;
 import kit.personal.ssoserver.repo.ActingRoleRepository;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
@@ -34,6 +36,9 @@ public class UserController {
     AppUserRepository appUserRepository;
     @Autowired
     DefaultTokenServices defaultTokenServices;
+
+    private static Logger LOG = LoggerFactory.getLogger(UserController.class);
+
 
     @GetMapping("/user/me")
     @ResponseBody
@@ -108,10 +113,13 @@ public class UserController {
     public void exit(HttpServletRequest request, HttpServletResponse response) {
         // TODO token can be revoked here if needed
         new SecurityContextLogoutHandler().logout(request, null, null);
+        LOG.error("someone call logout");
+        LOG.debug("someone call logout");
         try {
+            LOG.error("referer" + request.getHeader("referer"));
             //sending back to client app
             response.sendRedirect(request.getHeader("referer"));
-            //System.err.println("someone call logout" + request.getHeader("referer"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }

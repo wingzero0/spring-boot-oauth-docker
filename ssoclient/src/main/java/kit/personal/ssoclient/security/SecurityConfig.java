@@ -42,6 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .userService(this.userService())
                     .oidcUserService(this.oidcUserService())
         ;
+        http.logout().logoutUrl("/logoutPage").logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+        ;
     }
 
     private OAuth2UserService<OAuth2UserRequest, OAuth2User> userService() {
