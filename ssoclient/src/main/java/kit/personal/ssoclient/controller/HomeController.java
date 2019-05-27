@@ -8,9 +8,12 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -33,9 +36,13 @@ public class HomeController{
         return auth.getPrincipal().getClass().toGenericString() + "--------" + auth.getPrincipal().toString();
     }
 
+    @GetMapping("/loginPage")
+    public String login() {
+        return "loginPage";
+    }
+
     @GetMapping("/useriaslogout")
-    @ResponseBody
-    public String useriaslogout(OAuth2AuthenticationToken authentication) {
+    public String useriaslogout(OAuth2AuthenticationToken authentication, HttpServletRequest logoutRequest) {
         OAuth2AuthorizedClient authorizedClient = this.getAuthorizedClient(authentication);
         String ret = "token:" + authorizedClient.getAccessToken().getTokenValue();
         HttpClient client = HttpClient.newBuilder()
@@ -52,8 +59,9 @@ public class HomeController{
         client.sendAsync(request, BodyHandlers.ofString())
             .thenApply(HttpResponse::body)
             .thenAccept(System.out::println);
+        new SecurityContextLogoutHandler().logout(logoutRequest, null, null);
         // TODO clean session here
-        return ret;
+        return "redirect:/logout";
     }
 
     @GetMapping("/userinfo")

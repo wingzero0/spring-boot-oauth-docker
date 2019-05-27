@@ -31,14 +31,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/userias").hasRole("IAS")
-                .antMatchers("/usergoogle").hasRole("GOOGLE")
-                .anyRequest().authenticated()
+                    .antMatchers("/userias").hasRole("IAS")
+                    .antMatchers("/usergoogle").hasRole("GOOGLE")
+                    .antMatchers("/loginPage").permitAll()
+                    .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
-                .userInfoEndpoint()
-                .userService(this.userService())
-                .oidcUserService(this.oidcUserService())
+                    .loginPage("/loginPage")
+                    .userInfoEndpoint()
+                    .userService(this.userService())
+                    .oidcUserService(this.oidcUserService())
         ;
     }
 
