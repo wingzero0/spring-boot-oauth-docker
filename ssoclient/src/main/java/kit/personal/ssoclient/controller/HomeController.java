@@ -1,5 +1,7 @@
 package kit.personal.ssoclient.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,10 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -24,12 +28,14 @@ import java.net.http.HttpClient.Redirect;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 @Controller
 public class HomeController{
     @Autowired
     private OAuth2AuthorizedClientService authorizedClientService;
+    private static Logger LOG = LoggerFactory.getLogger(HomeController.class);
 
 
     @GetMapping("/")
@@ -68,8 +74,13 @@ public class HomeController{
         } catch (ServletException e) {
             e.printStackTrace();
         }
+
         try {
-            response.sendRedirect("http://localhost:8081/auth/exit");
+            String redirectURL = logoutRequest.getScheme() + "://" + logoutRequest.getServerName() + ":" + logoutRequest.getServerPort() + logoutRequest.getContextPath();
+            LOG.debug("redirect URL:" + redirectURL);
+            LOG.debug("encode redirect URL:" + URLEncoder.encode(redirectURL, StandardCharsets.UTF_8));
+
+            response.sendRedirect("http://localhost:8081/auth/exit?callbackURL="+ URLEncoder.encode(redirectURL, StandardCharsets.UTF_8));
             return;
         } catch (IOException e){
             e.printStackTrace();

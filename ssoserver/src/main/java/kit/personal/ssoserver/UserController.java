@@ -110,16 +110,14 @@ public class UserController {
     }
 
     @RequestMapping("/exit")
-    public void exit(HttpServletRequest request, HttpServletResponse response) {
-        // TODO token can be revoked here if needed
+    public void exit(HttpServletRequest request, HttpServletResponse response,
+                     @RequestParam(value = "callbackURL", required = true) String callbackURL) {
+        // client should manually call revokeAccessToken
         new SecurityContextLogoutHandler().logout(request, null, null);
-        LOG.error("someone call logout");
         LOG.debug("someone call logout");
         try {
-            LOG.error("referer" + request.getHeader("referer"));
-            //sending back to client app
-            response.sendRedirect(request.getHeader("referer"));
-
+            LOG.debug("callbackURL:" + callbackURL);
+            response.sendRedirect(callbackURL);
         } catch (IOException e) {
             e.printStackTrace();
         }
