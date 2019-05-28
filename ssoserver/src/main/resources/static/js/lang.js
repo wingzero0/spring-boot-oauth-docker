@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$('.ias-lang-btn').each(function(){
+	$('.sso-lang-btn').each(function(){
 		var btn = $(this);
 		var locale = btn.attr('data-lang');
 		btn.click(function(e){
