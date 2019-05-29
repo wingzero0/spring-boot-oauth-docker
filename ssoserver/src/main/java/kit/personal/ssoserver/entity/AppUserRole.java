@@ -6,8 +6,7 @@ import java.math.BigInteger;
 @Entity
 public class AppUserRole {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_generator")
-    @SequenceGenerator(name = "role_generator", sequenceName = "ROLE_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
     private String username;
     private String appId;

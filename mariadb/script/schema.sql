@@ -94,9 +94,9 @@ insert into oauth_client_details(client_id, resource_ids, client_secret, scope, 
    );
 
 
-INSERT INTO app_user (id, username, password, email) VALUES (1,	'john',	'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y',	'test@localhost.com');
-INSERT INTO app_user (id, username, password, email) VALUES (2, 'john2', '$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y', 'test2@localhost.com');
-INSERT INTO app_user_role (id, username, app_id, app_role) VALUES (1, 'john', 'spring-security-oauth2-read-write-client',  'readonlyclient');
+INSERT INTO app_user (id, username, password, email) VALUES (1,	'john',	/*456*/'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y',	'test@localhost.com');
+INSERT INTO app_user (id, username, password, email) VALUES (2, 'john2', /*456*/'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y', 'test2@localhost.com');
+INSERT INTO app_user_role (id, username, app_id, app_role) VALUES (1, 'john', 'spring-security-oauth2-read-write-client',  'readwriteclient');
 INSERT INTO app_user_acting (id, from_date, to_date, username, acting_for_username) VALUES (1, '2019-03-22 00:00:00',  '2019-04-22 23:59:59',  'john2',  'john');
 INSERT INTO app_user_acting (id, from_date, to_date, username, acting_for_username) VALUES (2, CURDATE(),  DATE_ADD(CURDATE(), INTERVAL 31 DAY),  'john2',  'john');
 

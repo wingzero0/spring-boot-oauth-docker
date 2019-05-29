@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +44,7 @@ public class UserController {
     @GetMapping("/user/me")
     @ResponseBody
     public Principal user(Principal principal) {
+        // TODO how to update info if token is a long term token?
         return principal;
     }
 
@@ -54,7 +56,11 @@ public class UserController {
         String username = principal.getName();
         Set<String> roles = new HashSet<>();
 
-        List<ActingRole> extendRoleList = actingRoleRepository.findAllByAppIdAndPkUsername(appId, username);
+        roles.add("ROLE_USER");
+
+        //List<ActingRole> extendRoleList = actingRoleRepository.findAllByAppIdAndPkUsername(appId, username);
+        Date today = new Date();
+        List<ActingRole> extendRoleList = actingRoleRepository.findAllByAppIdAndPkUsernameAndDate(appId, username, today);
 
 
         for (ActingRole role : extendRoleList){
