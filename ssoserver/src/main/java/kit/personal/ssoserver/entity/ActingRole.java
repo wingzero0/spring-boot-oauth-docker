@@ -18,8 +18,8 @@ public class ActingRole {
         private static final long serialVersionUID = 1L;
         private Date fromDate;
         private Date toDate;
-        private Integer username;
-        private Integer actingForUsername;
+        private String username;
+        private String actingForUsername;
 
         public Date getFromDate() {
             return fromDate;
@@ -37,19 +37,19 @@ public class ActingRole {
             this.toDate = toDate;
         }
 
-        public Integer getUsername() {
+        public String getUsername() {
             return username;
         }
 
-        public void setUsername(Integer username) {
+        public void setUsername(String username) {
             this.username = username;
         }
 
-        public Integer getActingForUsername() {
+        public String getActingForUsername() {
             return actingForUsername;
         }
 
-        public void setActingForUsername(Integer actingForUsername) {
+        public void setActingForUsername(String actingForUsername) {
             this.actingForUsername = actingForUsername;
         }
     }

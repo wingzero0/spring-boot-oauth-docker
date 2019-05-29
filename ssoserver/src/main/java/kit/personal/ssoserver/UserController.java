@@ -1,12 +1,16 @@
 package kit.personal.ssoserver;
 
+import kit.personal.ssoserver.entity.ActingRole;
 import kit.personal.ssoserver.entity.AppUser;
 import kit.personal.ssoserver.entity.AppUserRole;
+import kit.personal.ssoserver.repo.ActingRoleRepository;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
-import kit.personal.ssoserver.repo.ActingRoleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 public class UserController {
@@ -26,6 +34,11 @@ public class UserController {
     ActingRoleRepository actingRoleRepository;
     @Autowired
     AppUserRepository appUserRepository;
+    @Autowired
+    DefaultTokenServices defaultTokenServices;
+
+    private static Logger LOG = LoggerFactory.getLogger(UserController.class);
+
 
     @GetMapping("/user/me")
     @ResponseBody
@@ -39,17 +52,14 @@ public class UserController {
         OAuth2Authentication authen = (OAuth2Authentication) principal;
         String appId = authen.getOAuth2Request().getClientId();
         String username = principal.getName();
-        Set<String> roles = new HashSet<String>();
-        /*
-        List<ActingRole> extendRoleList = actingRoleRepository.findAllByAppAndPkFuncNo(appId, funcNo);
-         */
+        Set<String> roles = new HashSet<>();
 
-        /*
+        List<ActingRole> extendRoleList = actingRoleRepository.findAllByAppIdAndPkUsername(appId, username);
+
 
         for (ActingRole role : extendRoleList){
-            roles.add("ROLE_" + role.getApp() + "_" + role.getAppRole());
+            roles.add("ROLE_" + role.getAppId() + "_" + role.getAppRole());
         }
-        */
 
         List<AppUserRole> originalRoleList = roleRepository.findAllByAppIdAndUsername(appId, username);
         for (AppUserRole role : originalRoleList){
@@ -66,6 +76,20 @@ public class UserController {
         return appUser;
     }
 
+    @RequestMapping(value = "/user/revoke", method = RequestMethod.POST)
+    @ResponseBody
+    public String reovkeAccessToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        Pattern r = Pattern.compile("Bearer(\\s*)(.*)");
+        Matcher m = r.matcher(authHeader);
+
+        if (m.find()){
+            defaultTokenServices.revokeToken(m.group(2));
+            return "removing:" + m.group(2);
+        }
+
+        return "Bearer token not found";
+    }
 
 
     @GetMapping("/login")
@@ -86,13 +110,14 @@ public class UserController {
     }
 
     @RequestMapping("/exit")
-    public void exit(HttpServletRequest request, HttpServletResponse response) {
-        // TODO token can be revoked here if needed
+    public void exit(HttpServletRequest request, HttpServletResponse response,
+                     @RequestParam(value = "callbackURL", required = true) String callbackURL) {
+        // client should manually call revokeAccessToken
         new SecurityContextLogoutHandler().logout(request, null, null);
+        LOG.debug("someone call logout");
         try {
-            //sending back to client app
-            response.sendRedirect(request.getHeader("referer"));
-            //System.err.println("someone call logout" + request.getHeader("referer"));
+            LOG.debug("callbackURL:" + callbackURL);
+            response.sendRedirect(callbackURL);
         } catch (IOException e) {
             e.printStackTrace();
         }
