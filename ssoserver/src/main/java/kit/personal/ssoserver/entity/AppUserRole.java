@@ -8,6 +8,7 @@ public class AppUserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
+    // TODO consider add foreign key to AppUser.username, or change reference to AppUser.id?
     private String username;
     private String appId;
     private String appRole;

@@ -57,9 +57,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         //List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkUsername(username);
         List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkUsernameAndDate(username, new Date());
 
-       for (ActingRole role : extendRoleList){
-           grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
-       }
+        for (ActingRole role : extendRoleList){
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
+        }
 
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 

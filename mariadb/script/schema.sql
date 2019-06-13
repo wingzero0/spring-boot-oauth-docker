@@ -104,3 +104,4 @@ create view acting_role as
 select acting.from_date, acting.to_date, acting.username, acting.acting_for_username, app_user_role.app_id, app_user_role.app_role
 from app_user_acting acting, app_user_role
 where acting.acting_for_username = app_user_role.username
+and acting.to_date >= CURDATE()

@@ -1,7 +1,11 @@
 package kit.personal.ssoserver;
 
 import kit.personal.ssoserver.entity.AppUser;
+import kit.personal.ssoserver.entity.AppUserActing;
+import kit.personal.ssoserver.entity.AppUserRole;
+import kit.personal.ssoserver.repo.AppUserActingRepository;
 import kit.personal.ssoserver.repo.AppUserRepository;
+import kit.personal.ssoserver.repo.AppUserRoleRepository;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.transaction.Transactional;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import static org.assertj.core.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
@@ -43,6 +50,10 @@ import static org.assertj.core.api.Assertions.*;
 public class SsoserverApplicationTests {
 	@Autowired
 	private AppUserRepository appUserRepository;
+	@Autowired
+	private AppUserActingRepository appUserActingRepository;
+	@Autowired
+	private AppUserRoleRepository appUserRoleRepository;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -117,7 +128,7 @@ public class SsoserverApplicationTests {
 		).andDo(print()).andExpect(status().isOk());
 
 		this.mockMvc.perform(
-				get("/app/userListEmail")
+				get("/app/usersEmail")
 						.header("Authorization", "Bearer " + accessToken)
 						.param("username[]", "user1")
 						.param("username[]", "user2")
@@ -131,7 +142,7 @@ public class SsoserverApplicationTests {
 				post("/app/addUserRole")
 						.header("Authorization", "Bearer " + accessToken)
 						.param("username", "user1")
-						.param("roleSuffix", "shit")
+						.param("appRole", "shit")
 		).andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("true")))
@@ -158,6 +169,29 @@ public class SsoserverApplicationTests {
 		this.appUserRepository.save(user2);
 		assertThat(user1.getId()).isNotNull();
 		assertThat(user2.getId()).isNotNull();
+
+
+		Date current = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(current);
+		c.add(Calendar.DATE, 1);
+		Date tomorrow = c.getTime();
+		c.add(Calendar.DATE, -2);
+		Date yesterday = c.getTime();
+
+		AppUserActing appUserActing = new AppUserActing();
+		appUserActing.setUsername("user2").setActingForUsername("user1")
+				.setFromDate(yesterday)
+				.setToDate(tomorrow)
+		;
+
+		this.appUserActingRepository.save(appUserActing);
+
+		AppUserRole role = new AppUserRole();
+		role.setAppId("spring-security-oauth2-read-write-client");
+		role.setAppRole("original");
+		role.setUsername("user1");
+		this.appUserRoleRepository.save(role);
 	}
 
 }
