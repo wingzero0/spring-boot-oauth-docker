@@ -1,23 +1,24 @@
 package kit.personal.ssoserver;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import kit.personal.ssoserver.entity.ActingRole;
 import kit.personal.ssoserver.entity.AppUser;
 import kit.personal.ssoserver.entity.AppUserRole;
-import kit.personal.ssoserver.entity.GPSEmail;
+import kit.personal.ssoserver.entity.EntityJsonView;
+import kit.personal.ssoserver.repo.ActingRoleRepository;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
-import kit.personal.ssoserver.repo.ActingRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.security.Principal;
+import java.util.*;
 
 @Controller
 public class AppApiController {
@@ -34,8 +35,18 @@ public class AppApiController {
     @ResponseBody
     public Iterable<AppUserRole> offlineRole(Principal principal) {
         Iterable<AppUserRole> roleList = roleRepository.findAllByAppId(principal.getName());
-        // TODO search user by actingRoleRepository too;
-        // TODO add a new return type which combine role and substituicao role
+        return roleList;
+    }
+
+    @GetMapping("/app/fullUserListActing")
+    @PreAuthorize("#oauth2.hasScope('full_user_list')")
+    @ResponseBody
+    public Iterable<ActingRole> offlineActingRole(Principal principal) {
+        Date today = new Date();
+        Iterable<ActingRole> roleList = actingRoleRepository.findAllByAppIdAndDate(
+                principal.getName(),
+                today
+        );
         return roleList;
     }
 
@@ -53,103 +64,102 @@ public class AppApiController {
         Page<AppUserRole> roleList = roleRepository.findAllByAppId(principal.getName(), PageRequest.of(pageNum, limitNum, sort));
         return roleList;
     }
-    /*
-    @GetMapping("/app/addUserRole")
+
+    @PostMapping("/app/addUserRole")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
-    public Map<String, Object> offlineRole(
+    public Map<String, Boolean> offlineAddRole(
             Principal principal,
-            @RequestParam(value = "funcNo") Integer funcNo,
-            @RequestParam(value = "role") String roleName
+            @RequestParam(value = "username") String username,
+            @RequestParam(value = "appRole") String appRole
     ) {
         String appName = principal.getName();
-        long recordCount = roleRepository.countByAppAndFuncNoAndRole(appName, funcNo, roleName.toUpperCase());
-        HashMap<String, Object> ret = new HashMap<>();
+        long recordCount = roleRepository.countByAppIdAndUsernameAndAppRole(appName, username, appRole);
+        HashMap<String, Boolean> ret = new HashMap<>();
         if (recordCount <= 0.0){
             AppUserRole role = new AppUserRole();
             role.setAppId(appName)
-                    .setRole(roleName.toUpperCase())
-                    .setUsername(funcNo);
+                    .setAppRole(appRole)
+                    .setUsername(username);
             roleRepository.save(role);
-            ret.put("ret", new Long(1));
+            ret.put("ret", true);
         } else {
-            ret.put("ret", new Long(0));
+            ret.put("ret", false);
         }
         return ret;
     }
 
-    @GetMapping("/app/deleteUserRole")
+    @PostMapping("/app/deleteUserRole")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
     @Transactional
-    public Map<String, Object> deleteUserRole(
+    public Map<String, Boolean> deleteUserRole(
             Principal principal,
-            @RequestParam(value = "funcNo") Integer funcNo,
-            @RequestParam(value = "role") String roleName
+            @RequestParam(value = "username") String username,
+            @RequestParam(value = "appRole") String appRole
     ) {
         String appName = principal.getName();
-        long recordCount = roleRepository.deleteByAppAndFuncNoAndRole(appName, funcNo, roleName.toUpperCase());
-        HashMap<String, Object> ret = new HashMap<>();
-        ret.put("ret", new Long(recordCount));
+        long recordCount = roleRepository.deleteByAppIdAndUsernameAndAppRole(appName, username, appRole);
+        HashMap<String, Boolean> ret = new HashMap<>();
+        if (recordCount > 0.0){
+            ret.put("ret", true);
+        } else {
+            ret.put("ret", false);
+        }
         return ret;
     }
 
 
-    @GetMapping("/app/usersWithRole/{roleName}")
+    @GetMapping("/app/usersWithRole/{appRole}")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
-    public Iterable<AppUser> offlineUsersOfRole(Principal principal, @PathVariable String roleName) {
-        Iterable<AppUserRole> roleList = roleRepository.findAllByAppAndRole(principal.getName(), roleName);
-        Set<Integer> funcNos = new HashSet<>();
+    @JsonView(EntityJsonView.PUBLIC_VIEW.class)
+    public Iterable<AppUser> offlineUsersOfRole(Principal principal, @PathVariable String appRole) {
+        List<AppUserRole> roleList = roleRepository.findAllByAppIdAndAppRole(principal.getName(), appRole);
+        Set<String> usernames = new HashSet<>();
         for(AppUserRole role:roleList){
-            funcNos.add(role.getUsername());
+            usernames.add(role.getUsername());
         }
-        Iterable<ActingRole> substituicaoRoleList = actingRoleRepository.findAllByAppAndRole(principal.getName(), roleName);
-        for (ActingRole substituicaoRole:substituicaoRoleList){
-            funcNos.add(substituicaoRole.getPk().getFuncNo());
+        List<ActingRole> actingRoles = actingRoleRepository.findAllByAppIdAndAppRoleAndDate(principal.getName(), appRole, new Date());
+        for (ActingRole actingRole:actingRoles){
+            usernames.add(actingRole.getPk().getUsername());
         }
-        List<AppUser> gpsList = this.appUserRepository.findAllByFuncNoIn(funcNos);
-        for (AppUser gps: gpsList){
-            gps.setPassword(null); // TODO use json serializer instead of set null every time;
-        }
+        List<AppUser> gpsList = this.appUserRepository.findAllByUsernameIn(usernames);
         return gpsList;
     }
-    */
 
-    @GetMapping("/app/userEmail/{username}")
+    @GetMapping("/app/usersEmail")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
-    public GPSEmail offlineUserEmail(@PathVariable String username) {
-        AppUser appUser = appUserRepository.findOneByUsername(username);
-        if (appUser != null){
-            return GPSEmail.extractEmail(appUser);
+    @JsonView(EntityJsonView.PUBLIC_VIEW.class)
+    public List<AppUser> offlineUsersEmail(Principal principal,
+            @RequestParam(value = "username[]") String[] usernameArray
+    ) {
+        List<String> usernameList = Arrays.asList(usernameArray);
+        List<AppUserRole> roleList = this.roleRepository.findAllByAppIdAndUsernameIn(principal.getName(), usernameList);
+        Set<String> usernameFiltered = new HashSet<>();
+        for(AppUserRole role: roleList){
+            usernameFiltered.add(role.getUsername());
         }
-        return null;
-    }
-    /*
-    @GetMapping("/app/userListEmail/{funcNoList}")
-    @PreAuthorize("#oauth2.hasScope('full_user_list')")
-    @ResponseBody
-    public List<GPSEmail> offlineUserListEmail(Principal principal, @PathVariable String funcNoList) {
-        // funcNoList separated by "-"
-        List<String> funcNos = Arrays.asList(funcNoList.split("-"));
-        List<Integer> funcNosInteger = new ArrayList<>();
-        for (String funcNo : funcNos){
-            funcNosInteger.add(Integer.valueOf(funcNo));
+
+        List<ActingRole> actingRoleList = this.actingRoleRepository.findAllByAppIdAndPkUsernameInAndDate(principal.getName(), usernameList, new Date());
+        for(ActingRole actingRole: actingRoleList){
+            usernameFiltered.add(actingRole.getPk().getUsername());
         }
-        List<AppUser> gpsList = this.appUserRepository.findAllByFuncNoIn(funcNosInteger);
-        return GPSEmail.extractEmail(gpsList);
+        List<AppUser> appUserList = this.appUserRepository.findAllByUsernameIn(usernameFiltered);
+
+        return appUserList;
     }
 
-    @GetMapping("/app/userFuncNo/{email}")
-    @PreAuthorize("#oauth2.hasScope('full_user_list')")
+    @GetMapping("/app/allUsersEmail")
+    @PreAuthorize("#oauth2.hasScope('internal_trust_app')")
     @ResponseBody
-    public String offlineUsername(Principal principal, @PathVariable String email) {
-        AppUser gps = this.appUserRepository.findOneByEmail(email);
-        if (gps != null){
-            return gps.getUsername();
-        }
-        return null;
+    @JsonView(EntityJsonView.PUBLIC_VIEW.class)
+    public List<AppUser> offlineAllUsersEmail(Principal principal,
+                                              @RequestParam(value = "username[]") String[] usernameList
+    ) {
+        List<String> funcNos = Arrays.asList(usernameList);
+        List<AppUser> appUserList = this.appUserRepository.findAllByUsernameIn(funcNos);
+        return appUserList;
     }
-    */
 }

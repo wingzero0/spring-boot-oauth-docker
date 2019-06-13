@@ -1,5 +1,6 @@
 package kit.personal.ssoserver;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,10 +54,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
         }
 
-       List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkUsername(username);
-       for (ActingRole role : extendRoleList){
-           grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
-       }
+        //List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkUsername(username);
+        List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkUsernameAndDate(username, new Date());
+
+        for (ActingRole role : extendRoleList){
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
+        }
 
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 

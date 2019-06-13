@@ -57,7 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             OAuth2AccessToken accessToken = userRequest.getAccessToken();
             Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
-            mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_EMPTY"));
             Map<String, Object> stringObjectMap = oAuth2User.getAttributes();
             List<Object> objList = (List<Object>)stringObjectMap.get("authorities");
             for(Object obj: objList){
