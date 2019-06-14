@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>kit.personal</groupId>
-	<artifactId>ssoserver</artifactId>
+	<artifactId>ssoresourceserver</artifactId>
 	<version>0.6.0</version>
 	<packaging>war</packaging>
 

@@ -3,6 +3,7 @@ package kit.personal.ssoclient.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +34,9 @@ import java.time.Duration;
 
 @Controller
 public class HomeController{
+    @Value("${spring.security.oauth2.client.provider.springssoserver.baseurl}")
+    private String ssoserverBaseURL;
+
     @Autowired
     private OAuth2AuthorizedClientService authorizedClientService;
     private static Logger LOG = LoggerFactory.getLogger(HomeController.class);
@@ -60,7 +64,7 @@ public class HomeController{
             .build();
 
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8081/auth/user/revoke"))
+            .uri(URI.create(ssoserverBaseURL + "/user/revoke"))
             .timeout(Duration.ofMinutes(2))
             .header("Authorization", "Bearer " + authorizedClient.getAccessToken().getTokenValue())
             .POST(BodyPublishers.ofString(""))
@@ -80,7 +84,7 @@ public class HomeController{
             LOG.debug("redirect URL:" + redirectURL);
             LOG.debug("encode redirect URL:" + URLEncoder.encode(redirectURL, StandardCharsets.UTF_8));
 
-            response.sendRedirect("http://localhost:8081/auth/exit?callbackURL="+ URLEncoder.encode(redirectURL, StandardCharsets.UTF_8));
+            response.sendRedirect(ssoserverBaseURL + "/exit?callbackURL="+ URLEncoder.encode(redirectURL, StandardCharsets.UTF_8));
             return;
         } catch (IOException e){
             e.printStackTrace();
