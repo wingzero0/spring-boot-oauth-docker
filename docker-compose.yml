@@ -69,7 +69,7 @@ volumes:
   #     name: java_mavendata
   appdata:
     external:
-      name: java_workplace
+      name: java_workspace
 
 #in powershell
 # set-variable -name DISPLAY -value 10.61.110.225:0.0
