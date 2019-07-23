@@ -2,6 +2,7 @@ package kit.personal.ssoserver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -21,6 +23,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier("userDetailsServiceImpl")
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private ActiveDirectryAuthenticationProvider activeDirectryAuthenticationProvider;
+
+    @Autowired
+    private ADUserDetailsContextMapper adUserDetailsContextMapper;
+
+    @Value("${ad.domain}")
+    private String AD_DOMAIN;
+
+    @Value("${ad.url}")
+    private String AD_URL;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -37,7 +51,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void globalUserDetails(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(activeDirectoryLdapAuthenticationProvider());
+        //auth.authenticationProvider(activeDirectryAuthenticationProvider);
         auth.userDetailsService(userDetailsService);
+    }
+
+    protected ActiveDirectoryLdapAuthenticationProvider activeDirectoryLdapAuthenticationProvider(){
+        ActiveDirectoryLdapAuthenticationProvider provider = new ActiveDirectoryLdapAuthenticationProvider(AD_DOMAIN, AD_URL);
+        provider.setConvertSubErrorCodesToExceptions(true);
+        provider.setUseAuthenticationRequestCredentials(true);
+        provider.setUserDetailsContextMapper(adUserDetailsContextMapper);
+
+        return provider;
     }
 
     // TODO extract resource server into different project

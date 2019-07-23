@@ -67,6 +67,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         LOG.warn(password);
 
         appUser.setPassword(null);
+        // TODO consider to remove AuthUserAdapter because we won't push other things in session
         return new AuthUserAdapter(appUser.getUsername(), password, grantedAuthorities, appUser);
     }
 

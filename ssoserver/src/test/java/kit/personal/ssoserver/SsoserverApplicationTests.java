@@ -67,6 +67,39 @@ public class SsoserverApplicationTests {
 	private MockMvc mockMvc;
 
 	@Test
+	public void testPasswordGrantWithCustomADAuthentication() throws Exception {
+//		curl -X POST \
+//		http://localhost:8081/auth/oauth/token \
+//		-F grant_type=password \
+//		-F username=john \
+//		-F password=456 \
+//		-F client_id=spring-security-oauth2-read-write-client \
+//		-F client_secret=spring-security-oauth2-read-write-client-password1234
+		MvcResult result = this.mockMvc.perform(
+				post("/oauth/token")
+						.param("grant_type", "password")
+						.param("username", "stupiduser")
+						.param("password", "stupidpassword")
+						.param("client_id", "spring-security-oauth2-read-write-client")
+						.param("client_secret", "spring-security-oauth2-read-write-client-password1234")
+		).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("bearer")))
+				.andReturn();
+
+		String jsonStr = result.getResponse().getContentAsString();
+		JSONObject jsonObject = new JSONObject(jsonStr);
+		String accessToken = (String)jsonObject.get("access_token");
+		String tokenType = (String)jsonObject.get("token_type");
+		assertThat(tokenType).isEqualTo("bearer");
+		assertThat(accessToken).isNotEmpty();
+
+		// curl http://localhost:8081/auth/user/me -H "Authorization: Bearer 5a428f4c-3356-41c3-9a57-ca54971d75e0"
+		this.mockMvc.perform(
+				get("/user/me").header("Authorization", "Bearer " + accessToken)
+		).andDo(print()).andExpect(status().isOk());
+	}
+
+	@Test
 	public void testPasswordGrant() throws Exception {
 //		curl -X POST \
 //		http://localhost:8081/auth/oauth/token \

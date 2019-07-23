@@ -30,6 +30,14 @@ public class AppApiController {
     AppUserRepository appUserRepository;
 
 
+//    @PostMapping("/app/upsertUserList")
+//    @PreAuthorize("#oauth2.hasScope('user_management')")
+//    @ResponseBody
+//    public String upsertUserList(Principal principal, @RequestBody String jsonString) {
+//        //TODO make username as unique,
+//        return jsonString;
+//    }
+
     @GetMapping("/app/fullUserList")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")
     @ResponseBody
