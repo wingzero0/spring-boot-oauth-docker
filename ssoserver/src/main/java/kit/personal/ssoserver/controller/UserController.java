@@ -1,4 +1,4 @@
-package kit.personal.ssoserver;
+package kit.personal.ssoserver.controller;
 
 import kit.personal.ssoserver.entity.ActingRole;
 import kit.personal.ssoserver.entity.AppUser;
@@ -44,8 +44,8 @@ public class UserController {
     @GetMapping("/user/me")
     @ResponseBody
     public Principal user(Principal principal) {
-        // TODO how to update info if token is a long term token?
         return principal;
+        // User need to relogin to update principal
     }
 
     @GetMapping("/user/role")

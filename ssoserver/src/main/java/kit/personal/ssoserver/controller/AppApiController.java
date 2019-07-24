@@ -1,6 +1,8 @@
-package kit.personal.ssoserver;
+package kit.personal.ssoserver.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kit.personal.ssoserver.controller.exception.WrongParameterException;
 import kit.personal.ssoserver.entity.ActingRole;
 import kit.personal.ssoserver.entity.AppUser;
 import kit.personal.ssoserver.entity.AppUserRole;
@@ -8,15 +10,19 @@ import kit.personal.ssoserver.entity.EntityJsonView;
 import kit.personal.ssoserver.repo.ActingRoleRepository;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
+import kit.personal.ssoserver.utils.UpsertUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
@@ -28,15 +34,42 @@ public class AppApiController {
     ActingRoleRepository actingRoleRepository;
     @Autowired
     AppUserRepository appUserRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
-//    @PostMapping("/app/upsertUserList")
-//    @PreAuthorize("#oauth2.hasScope('user_management')")
-//    @ResponseBody
-//    public String upsertUserList(Principal principal, @RequestBody String jsonString) {
-//        //TODO make username as unique,
-//        return jsonString;
-//    }
+    @PostMapping(value = "/app/upsertUserList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("#oauth2.hasScope('user_management')")
+    @ResponseBody
+    public String upsertUserList(Principal principal, @RequestBody String jsonString) {
+        //TODO make username as unique,
+        ObjectMapper objectMapper = new ObjectMapper();
+        UpsertUser[] upsertUsers = new UpsertUser[0];
+        try {
+            upsertUsers = objectMapper.readValue(jsonString, UpsertUser[].class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new WrongParameterException("json parser fail");
+        }
+        List<AppUser> appUserList = new ArrayList<>();
+        for (UpsertUser user: upsertUsers){
+            AppUser appUser = appUserRepository.findOneByUsername(user.username);
+            if (appUser == null){
+                appUser = new AppUser();
+                appUser.setUsername(user.username);
+            }
+
+            appUser.setPassword(passwordEncoder.encode(user.password));
+            appUser.setEmail(user.email);
+            appUserList.add(appUser);
+        }
+        if (!appUserList.isEmpty()){
+            appUserRepository.saveAll(appUserList);
+            return "{\"ret\":true}";
+        } else {
+            return "{\"ret\":false}";
+        }
+    }
 
     @GetMapping("/app/fullUserList")
     @PreAuthorize("#oauth2.hasScope('full_user_list')")

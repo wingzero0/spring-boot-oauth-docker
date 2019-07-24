@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private ActiveDirectryAuthenticationProvider activeDirectryAuthenticationProvider;
+    private CustomAuthenticationProvider customAuthenticationProvider;
 
     @Autowired
     private ADUserDetailsContextMapper adUserDetailsContextMapper;
@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void globalUserDetails(final AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(activeDirectoryLdapAuthenticationProvider());
-        //auth.authenticationProvider(activeDirectryAuthenticationProvider);
+        //auth.authenticationProvider(customAuthenticationProvider);
         auth.userDetailsService(userDetailsService);
     }
 

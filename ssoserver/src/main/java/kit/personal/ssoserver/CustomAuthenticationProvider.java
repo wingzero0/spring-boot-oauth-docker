@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class ActiveDirectryAuthenticationProvider implements AuthenticationProvider {
+public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

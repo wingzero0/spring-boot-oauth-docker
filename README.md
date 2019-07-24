@@ -33,6 +33,16 @@ revoke
 curl -X POST http://localhost:8081/auth/user/revoke -H "Authorization: Bearer 5a428f4c-3356-41c3-9a57-ca54971d75e0"
 ```
 
+refresh
+```bash
+curl -X POST \
+	http://localhost:8081/auth/oauth/token \
+	-F grant_type=refresh_token \
+	-F client_id=spring-security-oauth2-read-write-client \
+	-F client_secret=spring-security-oauth2-read-write-client-password1234 \
+	-F refresh_token=e06e4235-a00d-4944-a7d0-a604902eb99a
+```
+
 ### test client_credentials authentication
 ```bash
 curl -X POST \

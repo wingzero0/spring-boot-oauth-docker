@@ -54,7 +54,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAppId() + "_" + role.getAppRole()));
         }
 
-        //List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkUsername(username);
         List<ActingRole> extendRoleList = actingRoleRepository.findAllByPkUsernameAndDate(username, new Date());
 
         for (ActingRole role : extendRoleList){
@@ -67,8 +66,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         LOG.warn(password);
 
         appUser.setPassword(null);
-        // TODO consider to remove AuthUserAdapter because we won't push other things in session
-        return new AuthUserAdapter(appUser.getUsername(), password, grantedAuthorities, appUser);
+
+        return new User(appUser.getUsername(), password, grantedAuthorities);
     }
 
     @Autowired
