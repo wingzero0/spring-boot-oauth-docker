@@ -65,7 +65,7 @@ public class SsoserverApplicationTests {
 
 	@Autowired
 	private MockMvc mockMvc;
-
+/*
 	@Test
 	public void testPasswordGrantWithCustomADAuthentication() throws Exception {
 //		curl -X POST \
@@ -98,7 +98,7 @@ public class SsoserverApplicationTests {
 				get("/user/me").header("Authorization", "Bearer " + accessToken)
 		).andDo(print()).andExpect(status().isOk());
 	}
-
+*/
 	@Test
 	public void testPasswordGrant() throws Exception {
 //		curl -X POST \
