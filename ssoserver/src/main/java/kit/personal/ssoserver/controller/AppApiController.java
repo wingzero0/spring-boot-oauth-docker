@@ -3,11 +3,9 @@ package kit.personal.ssoserver.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kit.personal.ssoserver.controller.exception.WrongParameterException;
-import kit.personal.ssoserver.entity.ActingRole;
-import kit.personal.ssoserver.entity.AppUser;
-import kit.personal.ssoserver.entity.AppUserRole;
-import kit.personal.ssoserver.entity.EntityJsonView;
+import kit.personal.ssoserver.entity.*;
 import kit.personal.ssoserver.repo.ActingRoleRepository;
+import kit.personal.ssoserver.repo.AppUserActingRepository;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
 import kit.personal.ssoserver.utils.UpsertUser;
@@ -35,6 +33,8 @@ public class AppApiController {
     @Autowired
     AppUserRepository appUserRepository;
     @Autowired
+    AppUserActingRepository appUserActingRepository;
+    @Autowired
     PasswordEncoder passwordEncoder;
 
 
@@ -44,7 +44,7 @@ public class AppApiController {
     public String upsertUserList(Principal principal, @RequestBody String jsonString) {
         //TODO make username as unique,
         ObjectMapper objectMapper = new ObjectMapper();
-        UpsertUser[] upsertUsers = new UpsertUser[0];
+        UpsertUser[] upsertUsers = null;
         try {
             upsertUsers = objectMapper.readValue(jsonString, UpsertUser[].class);
         } catch (IOException e) {
@@ -61,10 +61,41 @@ public class AppApiController {
 
             appUser.setPassword(passwordEncoder.encode(user.password));
             appUser.setEmail(user.email);
+            appUser.setLastModifiedDate(new Date());
+            appUser.setLastModifiedBy(principal.getName());
             appUserList.add(appUser);
         }
         if (!appUserList.isEmpty()){
             appUserRepository.saveAll(appUserList);
+            return "{\"ret\":true}";
+        } else {
+            return "{\"ret\":false}";
+        }
+    }
+
+    @PostMapping(value = "/app/upsertUserActing", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("#oauth2.hasScope('user_management')")
+    @ResponseBody
+    public String upsertUserActing(Principal principal, @RequestBody String jsonString) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        AppUserActing[] actingRecords = null;
+        try {
+            actingRecords = objectMapper.readValue(jsonString, AppUserActing[].class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new WrongParameterException("json parser fail");
+        }
+        List<AppUserActing> newActingList = new ArrayList<>();
+        for (AppUserActing acting: actingRecords){
+            AppUserActing exitingActing = appUserActingRepository.findOneByFromDateAndToDateAndUsernameAndActingForUsername(
+                    acting.getFromDate(), acting.getToDate(), acting.getUsername(), acting.getActingForUsername());
+            if (exitingActing != null){
+                continue;
+            }
+            newActingList.add(acting);
+        }
+        if (!newActingList.isEmpty()){
+            appUserActingRepository.saveAll(newActingList);
             return "{\"ret\":true}";
         } else {
             return "{\"ret\":false}";

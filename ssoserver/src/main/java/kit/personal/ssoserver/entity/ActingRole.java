@@ -1,5 +1,8 @@
 package kit.personal.ssoserver.entity;
 
+
+import org.springframework.data.annotation.Immutable;
+
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -7,6 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@Immutable
 public class ActingRole {
     @EmbeddedId
     private Pk pk;

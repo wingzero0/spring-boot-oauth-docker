@@ -1,12 +1,11 @@
 package kit.personal.ssoserver.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonView;
+//import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class AppUser implements Serializable {
@@ -18,6 +17,9 @@ public class AppUser implements Serializable {
     private String password;
     @JsonView(EntityJsonView.PUBLIC_VIEW.class)
     private String email;
+    //@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private Date lastModifiedDate;
+    private String lastModifiedBy;
 
     public BigInteger getId() {
         return id;
@@ -52,6 +54,24 @@ public class AppUser implements Serializable {
 
     public AppUser setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public AppUser setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+        return this;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public AppUser setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
         return this;
     }
 }
