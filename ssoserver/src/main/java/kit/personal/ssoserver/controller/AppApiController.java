@@ -9,6 +9,8 @@ import kit.personal.ssoserver.repo.AppUserActingRepository;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
 import kit.personal.ssoserver.utils.UpsertUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -37,6 +40,7 @@ public class AppApiController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    private static Logger LOG = LoggerFactory.getLogger(AppApiController.class);
 
     @PostMapping(value = "/app/upsertUserList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("#oauth2.hasScope('user_management')")
@@ -78,6 +82,7 @@ public class AppApiController {
     @ResponseBody
     public String upsertUserActing(Principal principal, @RequestBody String jsonString) {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"));
         AppUserActing[] actingRecords = null;
         try {
             actingRecords = objectMapper.readValue(jsonString, AppUserActing[].class);
@@ -92,6 +97,8 @@ public class AppApiController {
             if (exitingActing != null){
                 continue;
             }
+            acting.setLastModifiedBy(principal.getName())
+                    .setLastModifiedDate(new Date());
             newActingList.add(acting);
         }
         if (!newActingList.isEmpty()){
