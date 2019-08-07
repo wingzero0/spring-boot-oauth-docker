@@ -59,6 +59,8 @@ create table app_user (
   username varchar(256) NOT NULL,
   password varchar(256) NOT NULL,
   email varchar(256) DEFAULT NULL,
+  last_modified_date datetime NOT NULL,
+  last_modified_by varchar(256) NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -67,6 +69,8 @@ create table app_user_role(
   username varchar(256) NOT NULL,
   app_id varchar(256) NOT NULL,
   app_role varchar(256) NOT NULL,
+  last_modified_date datetime NOT NULL,
+  last_modified_by varchar(256) NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -76,6 +80,8 @@ create table app_user_acting (
   to_date datetime NOT NULL,
   username varchar(256) NOT NULL,
   acting_for_username varchar(256) NOT NULL,
+  last_modified_date datetime NOT NULL,
+  last_modified_by varchar(256) NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -117,11 +123,11 @@ insert into oauth_client_details(client_id, resource_ids, client_secret, scope, 
    );
 
 
-INSERT INTO app_user (id, username, password, email) VALUES (1,	'john',	/*456*/'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y',	'test@localhost.com');
-INSERT INTO app_user (id, username, password, email) VALUES (2, 'john2', /*456*/'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y', 'test2@localhost.com');
-INSERT INTO app_user_role (id, username, app_id, app_role) VALUES (1, 'john', 'spring-security-oauth2-read-write-client',  'readwriteclient');
-INSERT INTO app_user_acting (id, from_date, to_date, username, acting_for_username) VALUES (1, '2019-03-22 00:00:00',  '2019-04-22 23:59:59',  'john2',  'john');
-INSERT INTO app_user_acting (id, from_date, to_date, username, acting_for_username) VALUES (2, CURDATE(),  DATE_ADD(CURDATE(), INTERVAL 31 DAY),  'john2',  'john');
+INSERT INTO app_user (id, username, password, email, last_modified_date, last_modified_by) VALUES (1,	'john',	/*456*/'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y',	'test@localhost.com', CURDATE(), 'sysadmin');
+INSERT INTO app_user (id, username, password, email, last_modified_date, last_modified_by) VALUES (2, 'john2', /*456*/'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y', 'test2@localhost.com', CURDATE(), 'sysadmin');
+INSERT INTO app_user_role (id, username, app_id, app_role, last_modified_date, last_modified_by) VALUES (1, 'john', 'spring-security-oauth2-read-write-client',  'readwriteclient', CURDATE(), 'sysadmin');
+INSERT INTO app_user_acting (id, from_date, to_date, username, acting_for_username, last_modified_date, last_modified_by) VALUES (1, '2019-03-22 00:00:00',  '2019-04-22 23:59:59',  'john2',  'john', CURDATE(), 'sysadmin');
+INSERT INTO app_user_acting (id, from_date, to_date, username, acting_for_username, last_modified_date, last_modified_by) VALUES (2, CURDATE(),  DATE_ADD(CURDATE(), INTERVAL 31 DAY),  'john2',  'john', CURDATE(), 'sysadmin');
 
 create view acting_role as
 select acting.from_date, acting.to_date, acting.username, acting.acting_for_username, app_user_role.app_id, app_user_role.app_role

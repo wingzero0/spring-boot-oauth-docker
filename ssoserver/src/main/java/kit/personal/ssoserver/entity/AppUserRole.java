@@ -2,6 +2,7 @@ package kit.personal.ssoserver.entity;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.Date;
 
 @Entity
 public class AppUserRole {
@@ -12,6 +13,8 @@ public class AppUserRole {
     private String username;
     private String appId;
     private String appRole;
+    private Date lastModifiedDate;
+    private String lastModifiedBy;
 
     public BigInteger getId() {
         return id;

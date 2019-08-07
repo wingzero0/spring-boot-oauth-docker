@@ -1,5 +1,7 @@
 package kit.personal.ssoserver.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,10 +14,14 @@ public class AppUserActing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private Date fromDate;
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private Date toDate;
     private String username;
     private String actingForUsername;
+    private Date lastModifiedDate;
+    private String lastModifiedBy;
 
     public BigInteger getId() {
         return id;
@@ -59,6 +65,24 @@ public class AppUserActing {
 
     public AppUserActing setActingForUsername(String actingForUsername) {
         this.actingForUsername = actingForUsername;
+        return this;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public AppUserActing setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+        return this;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public AppUserActing setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
         return this;
     }
 }
