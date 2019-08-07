@@ -51,4 +51,22 @@ public class AppUserRole {
         this.appRole = role;
         return this;
     }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public AppUserRole setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+        return this;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public AppUserRole setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+        return this;
+    }
 }

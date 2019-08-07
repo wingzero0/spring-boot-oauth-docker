@@ -186,15 +186,20 @@ public class SsoserverApplicationTests {
 
 	@Before
 	public void setUp() throws Exception {
+		Date now = new Date();
 		this.appUserRepository.deleteAll();
 		AppUser user1 = new AppUser();
 		user1.setEmail("user1@sso.localhost")
 				.setUsername("user1")
-				.setPassword(passwordEncoder.encode("1resu"));
+				.setPassword(passwordEncoder.encode("1resu"))
+				.setLastModifiedDate(now)
+				.setLastModifiedBy("systemadmin");
 		AppUser user2 = new AppUser();
 		user2.setEmail("user2@sso.localhost")
 				.setUsername("user2")
-				.setPassword(passwordEncoder.encode("2resu"));
+				.setPassword(passwordEncoder.encode("2resu"))
+				.setLastModifiedDate(now)
+				.setLastModifiedBy("systemadmin");
 		//save user, verify has ID value after save
 		assertThat(user1.getId()).isNull();
 		assertThat(user2.getId()).isNull();
@@ -216,14 +221,19 @@ public class SsoserverApplicationTests {
 		appUserActing.setUsername("user2").setActingForUsername("user1")
 				.setFromDate(yesterday)
 				.setToDate(tomorrow)
+				.setLastModifiedDate(now)
+				.setLastModifiedBy("systemadmin")
 		;
 
 		this.appUserActingRepository.save(appUserActing);
 
 		AppUserRole role = new AppUserRole();
-		role.setAppId("spring-security-oauth2-read-write-client");
-		role.setAppRole("original");
-		role.setUsername("user1");
+		role.setAppId("spring-security-oauth2-read-write-client")
+			.setAppRole("original")
+			.setUsername("user1")
+			.setLastModifiedDate(now)
+			.setLastModifiedBy("systemadmin")
+		;
 		this.appUserRoleRepository.save(role);
 	}
 

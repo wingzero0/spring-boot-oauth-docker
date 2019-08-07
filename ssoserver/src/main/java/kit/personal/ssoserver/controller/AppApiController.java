@@ -158,8 +158,11 @@ public class AppApiController {
         if (recordCount <= 0.0){
             AppUserRole role = new AppUserRole();
             role.setAppId(appName)
-                    .setAppRole(appRole)
-                    .setUsername(username);
+                .setAppRole(appRole)
+                .setUsername(username)
+                .setLastModifiedBy(principal.getName())
+                .setLastModifiedDate(new Date())
+            ;
             roleRepository.save(role);
             ret.put("ret", true);
         } else {
