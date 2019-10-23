@@ -64,6 +64,19 @@ services:
     tty: true
     working_dir: /root
 
+  nodecompiler:
+    image: node:12.9 # or maven:3.6.0-jdk-11 if you run without IDE
+    volumes:
+      - appdata:/root/:Z
+      - ./:/root/external
+    # ports:
+    #   - 3000:3000
+    command: bash
+    stdin_open: true
+    tty: true
+    working_dir: /root
+
+    
 #  tomcat:
 #    image: docker.ias.gov.mo:5001/tomcat9.0
 #    ports:
