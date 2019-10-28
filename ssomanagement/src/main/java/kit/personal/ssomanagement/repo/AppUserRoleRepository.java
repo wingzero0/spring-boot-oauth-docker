@@ -5,10 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
-public interface AppUserRoleRepository extends CrudRepository<AppUserRole, Integer> {
+public interface AppUserRoleRepository extends CrudRepository<AppUserRole, BigInteger> {
 	List<AppUserRole> findAllByUsername(String username);
 	List<AppUserRole> findAllByAppId(String app);
 	Page<AppUserRole> findAllByAppId(String app, Pageable pageable);
