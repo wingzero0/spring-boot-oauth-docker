@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +33,10 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class HomeController{
@@ -109,6 +113,21 @@ public class HomeController{
             }
             return;
         }
+    }
+
+    @GetMapping(value = "/api/csrf-token", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, String> getCsrfToken(HttpServletRequest request){
+        Enumeration<String> attributes = request.getAttributeNames();
+        while (attributes.hasMoreElements()){
+            LOG.debug(attributes.nextElement());
+        }
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        LOG.debug("CsrfToken.class.getName():" + CsrfToken.class.getName());
+        Map<String, String> map = new HashMap<>();
+        map.put("csrf_header","X-CSRF-TOKEN");
+        map.put("csrf_token", token.getToken());
+        return map;
     }
 
     @GetMapping("/userinfo")

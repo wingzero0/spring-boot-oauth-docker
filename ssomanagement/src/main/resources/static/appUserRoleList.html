@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css"/>
+</head>
+<body>
+<div class="container">
+    <div id="app">
+        <div>
+            appId : {{ appId }}
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Action
+            </div>
+            <div class="col-md-5">
+                Username
+            </div>
+            <div class="col-md-5">
+                Role
+            </div>
+        </div>
+        <div v-for="appUserRole in appUserRoleList">
+            <div class="row">
+                <div class="col-md-2">
+                    <a v-bind:href="'appUserRoleForm.html?id=' + appUserRole.id + '&appId=' + appId">Edit</a>
+                </div>
+                <div class="col-md-5">
+                    {{ appUserRole.username }}
+                </div>
+                <div class="col-md-5">
+                    {{ appUserRole.appRole }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="vendor/vue/dist/vue.js"></script>
+<script src="js/appUserRoleList.js"></script>
+</body>
+</html>
