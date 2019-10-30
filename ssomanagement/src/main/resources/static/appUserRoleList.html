@@ -9,7 +9,13 @@
 <div class="container">
     <div id="app">
         <div>
+            <a class="btn btn-info" href="appList.html" role="button">App List</a>
+        </div>
+        <div>
             appId : {{ appId }}
+        </div>
+        <div>
+            <a class="btn btn-primary" v-bind:href="'appUserRoleForm.html?appId=' + appId" role="button">New</a>
         </div>
         <div class="row">
             <div class="col-md-2">

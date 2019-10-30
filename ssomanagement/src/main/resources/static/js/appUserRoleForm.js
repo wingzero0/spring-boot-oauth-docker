@@ -67,6 +67,7 @@
                         console.log('fetch success');
                         console.log(result);
                         self.appUserRole = result;
+                        window.location = 'appUserRoleList.html?appId=' + self.appUserRole.appId;
                     },
                     (error) => {
                     console.log(error);
