@@ -4,34 +4,48 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="vendor/material-design-icons/iconfont/material-icons.css"/>
+    <style>
+        .top-buffer{
+            margin-top: 5px;
+        }
+        .table-header{
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
     <div id="app">
-        <div>
-            <a class="btn btn-info" href="appList.html" role="button">App List</a>
-        </div>
-        <div>
-            appId : {{ appId }}
-        </div>
-        <div>
-            <a class="btn btn-primary" v-bind:href="'appUserRoleForm.html?appId=' + appId" role="button">New</a>
-        </div>
         <div class="row">
-            <div class="col-md-2">
-                Action
+            <div class="col-12">
+                <a href="appList.html">
+                    <i class="material-icons" style="vertical-align:bottom;font-size: 2em;">
+                        home
+                    </i>
+                </a>
+                appId : {{ appId }}
             </div>
-            <div class="col-md-5">
+        </div>
+        <a v-bind:href="'appUserRoleForm.html?appId=' + appId">
+            <i class="material-icons" style="font-size: 2em;">add_box</i>
+        </a>
+        <div class="row">
+            <div class="col-md-2 table-header">
+
+            </div>
+            <div class="col-md-5 table-header">
                 Username
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5 table-header">
                 Role
             </div>
         </div>
         <div v-for="appUserRole in appUserRoleList">
-            <div class="row">
+            <div class="row top-buffer">
                 <div class="col-md-2">
-                    <a v-bind:href="'appUserRoleForm.html?id=' + appUserRole.id + '&appId=' + appId">Edit</a>
+                    <a class="btn btn-primary" v-bind:href="'appUserRoleForm.html?id=' + appUserRole.id + '&appId=' + appId">Edit</a>
+                    <a class="btn btn-danger" href="#" v-on:click="deleteAppUserRole(appUserRole.id)">Delete</a>
                 </div>
                 <div class="col-md-5">
                     {{ appUserRole.username }}

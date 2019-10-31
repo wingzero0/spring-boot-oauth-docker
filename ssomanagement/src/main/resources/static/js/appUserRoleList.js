@@ -47,25 +47,24 @@
             });
         },
         methods: {
-            save: function(){
+            deleteAppUserRole: function(id){
                 var self = this;
-                fetch("api/role/", {
-                    method: 'POST',
+                fetch("api/role/?id=" + id, {
+                    method: 'DELETE',
                     headers: self.headers,
-                    body : JSON.stringify(self.appUserRole),
                 })
                 .then(res => res.json())
                 .then(
                     (result) => {
-                        console.log('fetch success');
+                        console.log('delete success');
                         console.log(result);
-                        self.appUserRole = result;
+                        window.location.reload();
                     },
                     (error) => {
                     console.log(error);
                     }
                 );
-            },
+            }
         }
     });
 

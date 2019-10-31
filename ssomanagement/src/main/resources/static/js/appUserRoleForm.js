@@ -8,6 +8,7 @@
                 appId: null,
                 appRole: null,
             },
+            errors:[],
             headers : {
 
             },
@@ -54,8 +55,13 @@
             }
         },
         methods: {
-            save: function(){
+            save: function(event){
+                event.preventDefault();
                 var self = this;
+                self.checkForm();
+                if (self.errors.length > 0){
+                    return;
+                }
                 fetch("api/role/", {
                     method: 'POST',
                     headers: self.headers,
@@ -74,6 +80,22 @@
                     }
                 );
             },
+            checkForm : function(){
+                this.errors = [];
+                var letterNumber = /^[0-9a-zA-Z]+$/;
+                if (!letterNumber.test(this.appUserRole.username)) {
+                    this.errors.push('username should only contain letter and number');
+                }
+                if (!letterNumber.test(this.appUserRole.appRole)) {
+                    this.errors.push('appRole should only contain letter and number');
+                }
+                if (this.appUserRole.username === "" || this.appUserRole.username === null) {
+                    this.errors.push('username could not empty');
+                }
+                if (this.appUserRole.appRole === "" || this.appUserRole.appRole === null) {
+                    this.errors.push('appRole could not empty');
+                }
+            }
         }
     });
 

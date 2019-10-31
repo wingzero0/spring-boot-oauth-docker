@@ -20,7 +20,18 @@
                     <label for="appRole">AppRole</label>
                     <input type="text" class="form-control" id="appRole" v-model="appUserRole.appRole"/>
                 </div>
-                <button type="button" class="btn btn-primary" v-on:click="save">Save</button>
+                <div class="row">
+                    <div class="col-12">
+                        <a class="btn btn-primary" href="#" role="button" v-on:click="save">Save</a>
+                        <a class="btn btn-default" v-bind:href="'appUserRoleList.html?appId=' + appUserRole.appId">Cancel</a>
+                    </div>
+                </div>
+
+                <div class="row" v-for="error in errors">
+                    <div class="col-12 text-danger">
+                        {{ error }}
+                    </div>
+                </div>
             </form>
         </div>
     </div>
