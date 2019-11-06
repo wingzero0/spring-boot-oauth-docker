@@ -43,6 +43,9 @@ public class HomeController{
     @Value("${spring.security.oauth2.client.provider.springssoserver.baseurl}")
     private String ssoserverBaseURL;
 
+    @Value("${application.disable_api_auth}")
+    private boolean isDisableAPIAuth;
+
     @Autowired
     AppUserRoleRepository roleRepo;
 
@@ -122,11 +125,17 @@ public class HomeController{
         while (attributes.hasMoreElements()){
             LOG.debug(attributes.nextElement());
         }
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        LOG.debug("CsrfToken.class.getName():" + CsrfToken.class.getName());
         Map<String, String> map = new HashMap<>();
         map.put("csrf_header","X-CSRF-TOKEN");
-        map.put("csrf_token", token.getToken());
+        if (isDisableAPIAuth){
+            LOG.debug("dummy csrf_token");
+            map.put("csrf_token", "dummy");
+        } else {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+            LOG.debug("CsrfToken.class.getName():" + CsrfToken.class.getName());
+            map.put("csrf_token", token.getToken());
+        }
+
         return map;
     }
 
