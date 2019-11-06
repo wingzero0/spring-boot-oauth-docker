@@ -8,7 +8,7 @@
         <div v-bind:key="index" v-for="(app,index) in appList">
             <div class="row">
                 <div class="col-md-12">
-                    <a v-bind:href="'appUserRoleList.html?appId=' + app.clientId">{{ app.clientId }}</a>
+                    <router-link :to='{name:"appRoleList", params:{appId : app.clientId }}' class="btn btn-primary" role="button">{{app.clientId}}</router-link>
                 </div>
             </div>
         </div>
