@@ -54,12 +54,12 @@ public class HomeController{
     private static Logger LOG = LoggerFactory.getLogger(HomeController.class);
 
 
-    @GetMapping("/")
-    @ResponseBody
-    public String index() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getPrincipal().getClass().toGenericString() + "--------" + auth.getPrincipal().toString();
-    }
+//    @GetMapping("/")
+//    @ResponseBody
+//    public String index() {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        return auth.getPrincipal().getClass().toGenericString() + "--------" + auth.getPrincipal().toString();
+//    }
 
     @GetMapping(value = "/api/appUserRole/{appId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

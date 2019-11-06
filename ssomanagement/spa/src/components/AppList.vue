@@ -15,7 +15,7 @@
     </div>
 </template>
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 export default {
     name: 'AppList',
@@ -23,51 +23,57 @@ export default {
         return{
             page: null,
             appList: [],
-            headers : {
-
+            axiosConfig: {
+                headers : {
+                },
+                data:{
+                }
             },
         }
     },
     mounted: function(){
-        var self = this;
-        self.headers['Accept'] = 'application/json';
-        self.headers['Content-Type'] = 'application/json';
-        fetch('api/csrf-token', {
-            method: 'GET',
-            headers: self.headers,
-        })
-        .then(res => res.json())
-        .then(
-            (result) => {
-                console.log(result);
-                self.headers[result.csrf_header] = result.csrf_token;
-                console.log(self.headers);
-            },
-            (error) => {
-                console.log(error);
-            }
-        );
+        let self = this;
+        self.axiosConfig.headers['Accept'] = 'application/json';
+        self.axiosConfig.headers['Content-Type'] = 'application/json';
 
-        var url = new URL(window.location.href);
-        var page = url.searchParams.get('page');
-        if (page === null){
-            page = 0;
-        }
-        self.page =  page;
-
-        fetch("api/app/findAll?page=" + self.page, {
-            method: 'GET',
-            headers: self.headers,
-        })
-        .then(res => res.json())
-        .then((result) => {
-                console.log('fetch success');
-                console.log(result);
-                self.appList = result.content;
-            },
-            (error) => {
+        axios.get('api/csrf-token', self.axiosConfig)
+            .then(function (response) {
+                console.log(response);
+                self.axiosConfig.headers[response.data.csrf_header] = response.data.csrf_token;
+            })
+            .catch(function (error) {
                 console.log(error);
-        });
+            });
+
+        axios.get('api/app/findAll?page=0', self.axiosConfig)
+            .then(function (response) {
+                console.log(response);
+                self.appList = response.data.content;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        // var url = new URL(window.location.href);
+        // var page = url.searchParams.get('page');
+        // if (page === null){
+        //     page = 0;
+        // }
+        // self.page =  page;
+        //
+        // fetch("api/app/findAll?page=" + self.page, {
+        //     method: 'GET',
+        //     headers: self.headers,
+        // })
+        // .then(res => res.json())
+        // .then((result) => {
+        //         console.log('fetch success');
+        //         console.log(result);
+        //         self.appList = result.content;
+        //     },
+        //     (error) => {
+        //         console.log(error);
+        // });
     },
     methods: {
     },
