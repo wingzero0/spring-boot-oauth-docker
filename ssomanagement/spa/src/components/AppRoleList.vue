@@ -5,12 +5,12 @@
                 <router-link v-bind:to="{ name: 'appList' }">
                     <HomeIcon></HomeIcon>
                 </router-link>
-                appId : {{ appId }}
+                {{ appId }}
             </div>
         </div>
-        <a v-bind:href="'appUserRoleForm.html?appId=' + appId">
+        <router-link v-bind:to="{ name: 'appRoleForm', params: {appId: $route.params.appId, id:'new'} } ">
             <PlusBoxIcon></PlusBoxIcon>
-        </a>
+        </router-link>
         <div class="row">
             <div class="col-md-2 table-header">
 
@@ -25,7 +25,11 @@
         <div v-bind:key="index" v-for="(appUserRole, index) in appUserRoleList">
             <div class="row top-buffer">
                 <div class="col-md-2">
-                    <a class="btn btn-primary" v-bind:href="'appUserRoleForm.html?id=' + appUserRole.id + '&appId=' + appId">Edit</a>
+                    <router-link v-bind:to="{ name: 'appRoleForm', params: {appId: $route.params.appId, id:appUserRole.id} } "
+                                 class="btn btn-primary" role="button"
+                    >
+                        Edit
+                    </router-link>
                     <a class="btn btn-danger" href="#" v-on:click="deleteAppUserRole(appUserRole.id)">Delete</a>
                 </div>
                 <div class="col-md-5">
@@ -65,6 +69,7 @@
             let self = this;
             self.axiosConfig.headers['Accept'] = 'application/json';
             self.axiosConfig.headers['Content-Type'] = 'application/json';
+            self.appId = this.$route.params.appId;
 
             axios.get('api/csrf-token', self.axiosConfig)
                 .then(function (response) {
@@ -74,24 +79,28 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-            self.appId = this.$route.params.appId;
-            axios.get("api/role/filerByAppId?appId=" + self.appId, self.axiosConfig)
-                .then(function (response) {
-                    console.log(response);
-                    self.appUserRoleList = response.data.content;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+
+            this.fetchRecord();
         },
         methods: {
+            fetchRecord:function(){
+                let self = this;
+                axios.get("api/role/filerByAppId?appId=" + self.appId, self.axiosConfig)
+                    .then(function (response) {
+                        console.log(response);
+                        self.appUserRoleList = response.data.content;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
             deleteAppUserRole: function(id){
                 let self = this;
                 axios.delete("api/role/?id=" + id, self.axiosConfig)
                     .then(function (response){
                         console.log("delete return");
                         console.log(response);
-                        // window.location.reload();
+                        self.fetchRecord();
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -101,6 +110,11 @@
         components: {
             HomeIcon,
             PlusBoxIcon,
-        }
+        },
+        watch:{
+            '$route' (){
+                this.fetchRecord();
+            }
+        },
     }
 </script>

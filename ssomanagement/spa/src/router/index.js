@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import AppList from '../components/AppList.vue'
-// import AppRoleList from '../components/AppRoleList.vue'
 // import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
@@ -16,6 +15,11 @@ const routes = [
     path: '/appRole/:appId',
     name: 'appRoleList',
     component: () => import('../components/AppRoleList.vue')
+  },
+  {
+    path: '/appRoleForm/:appId/:id',
+    name: 'appRoleForm',
+    component: () => import('../components/AppRoleForm.vue')
   },
   {
     path: '/about',

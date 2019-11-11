@@ -7,8 +7,11 @@
         </div>
         <div v-bind:key="index" v-for="(app,index) in appList">
             <div class="row">
-                <div class="col-md-12">
-                    <router-link :to='{name:"appRoleList", params:{appId : app.clientId }}' class="btn btn-primary" role="button">{{app.clientId}}</router-link>
+                <div class="col-md-2">
+                    <router-link :to='{name:"appRoleList", params:{appId : app.clientId }}' class="btn btn-primary" role="button">Edit</router-link>
+                </div>
+                <div class="col-md-10">
+                    <router-link :to='{name:"appRoleList", params:{appId : app.clientId }}' >{{app.clientId}}</router-link>
                 </div>
             </div>
         </div>
