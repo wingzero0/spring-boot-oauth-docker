@@ -30,7 +30,7 @@
                     >
                         Edit
                     </router-link>
-                    <a class="btn btn-danger" href="#" v-on:click="deleteAppUserRole(appUserRole.id)">Delete</a>
+                    <a class="btn btn-danger" href="#" v-on:click="(event) => {showPopup(event, appUserRole.username, appUserRole.appRole, appUserRole.id)}">Delete</a>
                 </div>
                 <div class="col-md-5">
                     {{ appUserRole.username }}
@@ -40,7 +40,19 @@
                 </div>
             </div>
         </div>
-
+        <div>
+            <b-modal id="modal-1" title="BootstrapVue">
+                <p class="my-4">{{deleteMsg}}</p>
+                <template v-slot:modal-footer="{ ok, cancel }">
+                    <b-button size="sm" variant="default" @click="cancel()">
+                        Cancel
+                    </b-button>
+                    <b-button size="sm" variant="danger" @click="deleteAppUserRole">
+                        Delete
+                    </b-button>
+                </template>
+            </b-modal>
+        </div>
     </div>
 </template>
 <script>
@@ -63,6 +75,8 @@
                     data:{
                     }
                 },
+                deleteMsg: null,
+                deleteId: null,
             }
         },
         mounted: function(){
@@ -93,18 +107,26 @@
                         console.log(error);
                     });
             },
-            deleteAppUserRole: function(id){
+            deleteAppUserRole: function(){
                 let self = this;
-                axios.delete("api/role/" + id, self.axiosConfig)
+                axios.delete("api/role/" + self.deleteId, self.axiosConfig)
                     .then(function (response){
                         console.log("delete return");
                         console.log(response);
                         self.fetchRecord();
+                        self.$bvModal.hide('modal-1');
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
-            }
+            },
+            showPopup: function(event, username, role, id){
+                event.preventDefault();
+                console.log(event);
+                this.deleteMsg = 'Are you sure to delete record:' + username + '-' + role;
+                this.deleteId = id;
+                this.$bvModal.show('modal-1');
+            },
         },
         components: {
             HomeIcon,
