@@ -20,17 +20,17 @@ import java.math.BigInteger;
 import java.util.*;
 
 @Controller
-@RequestMapping(value = "/api/app")
+@RequestMapping(value = "/api")
 public class AppApiController {
 	@Autowired
 	AppRepository appRepository;
 	private static Logger LOG = LoggerFactory.getLogger(AppApiController.class);
 
-	@GetMapping( value = "/findAll", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping( value = "/app", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Page<App> filterByAppId(
-			@RequestParam(value = "page", required = false, defaultValue = "0") String page,
-			@RequestParam(value = "limit", required = false, defaultValue = "10") String limit
+	public Page<App> getAppList(
+			@RequestParam(value = "pageNumber", required = false, defaultValue = "0") String page,
+			@RequestParam(value = "pageSize", required = false, defaultValue = "10") String limit
 	){
 		int pageNum = Integer.valueOf(page);
 		int limitNum = Integer.valueOf(limit);

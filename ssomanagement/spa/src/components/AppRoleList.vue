@@ -1,15 +1,15 @@
 <template>
-    <div class="container">
+    <div>
         <div class="row">
             <div class="col-12">
-                <router-link v-bind:to="{ name: 'appList' }">
-                    <HomeIcon></HomeIcon>
+                <router-link class="ssonav" v-bind:to="{ name: 'appList' }">
+                    <HomeIcon></HomeIcon>{{ appId }}
                 </router-link>
-                {{ appId }}
             </div>
         </div>
+        <hr/>
         <router-link v-bind:to="{ name: 'appRoleForm', params: {appId: $route.params.appId, id:'new'} } ">
-            <PlusBoxIcon></PlusBoxIcon>
+            <PlusBoxIcon></PlusBoxIcon>Add
         </router-link>
         <div class="row">
             <div class="col-md-2 table-header">
@@ -75,17 +75,16 @@
                 .then(function (response) {
                     console.log(response);
                     self.axiosConfig.headers[response.data.csrf_header] = response.data.csrf_token;
+                    self.fetchRecord();
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-
-            this.fetchRecord();
         },
         methods: {
             fetchRecord:function(){
                 let self = this;
-                axios.get("api/role/filerByAppId?appId=" + self.appId, self.axiosConfig)
+                axios.get("api/role?appId=" + self.appId, self.axiosConfig)
                     .then(function (response) {
                         console.log(response);
                         self.appUserRoleList = response.data.content;
@@ -96,7 +95,7 @@
             },
             deleteAppUserRole: function(id){
                 let self = this;
-                axios.delete("api/role/?id=" + id, self.axiosConfig)
+                axios.delete("api/role/" + id, self.axiosConfig)
                     .then(function (response){
                         console.log("delete return");
                         console.log(response);

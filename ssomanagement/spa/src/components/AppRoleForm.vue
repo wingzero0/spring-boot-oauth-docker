@@ -1,11 +1,10 @@
 <template>
-    <div class="container">
+    <div>
         <div class="row">
             <div class="col-12">
-                <router-link v-bind:to="{ 'name': 'appRoleList', params:{ 'appId' : $route.params.appId }}">
-                    <ArrowLeft></ArrowLeft>
+                <router-link class="ssonav" v-bind:to="{ 'name': 'appRoleList', params:{ 'appId' : $route.params.appId }}">
+                    <ArrowLeft></ArrowLeft>{{ appId }}
                 </router-link>
-                {{ appId }}
             </div>
         </div>
         <form>
@@ -73,18 +72,18 @@
                 .then(function (response) {
                     console.log(response);
                     self.axiosConfig.headers[response.data.csrf_header] = response.data.csrf_token;
+                    self.fetchRecord();
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-            self.fetchRecord();
         },
         methods: {
             fetchRecord: function () {
                 let self = this;
                 let id = this.$route.params.id;
                 if (id !== 'new'){
-                    axios.get('api/role/?id=' + id, self.axiosConfig)
+                    axios.get('api/role/' + id, self.axiosConfig)
                         .then(function (response) {
                             console.log(response);
                             self.appUserRole = response.data;

@@ -1,12 +1,13 @@
 <template>
-    <div class="container">
+    <div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 ssonav">
                 App List
             </div>
         </div>
+        <hr/>
         <div v-bind:key="index" v-for="(app,index) in appList">
-            <div class="row">
+            <div class="row top-buffer">
                 <div class="col-md-2">
                     <router-link :to='{name:"appRoleList", params:{appId : app.clientId }}' class="btn btn-primary" role="button">Edit</router-link>
                 </div>
@@ -24,7 +25,7 @@ export default {
     name: 'AppList',
     data: function(){
         return{
-            page: null,
+            pageNumber: 0,
             appList: [],
             axiosConfig: {
                 headers : {
@@ -43,42 +44,24 @@ export default {
             .then(function (response) {
                 console.log(response);
                 self.axiosConfig.headers[response.data.csrf_header] = response.data.csrf_token;
+                self.fetchRecord();
             })
             .catch(function (error) {
                 console.log(error);
             });
-
-        axios.get('api/app/findAll?page=0', self.axiosConfig)
-            .then(function (response) {
-                console.log(response);
-                self.appList = response.data.content;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        // var url = new URL(window.location.href);
-        // var page = url.searchParams.get('page');
-        // if (page === null){
-        //     page = 0;
-        // }
-        // self.page =  page;
-        //
-        // fetch("api/app/findAll?page=" + self.page, {
-        //     method: 'GET',
-        //     headers: self.headers,
-        // })
-        // .then(res => res.json())
-        // .then((result) => {
-        //         console.log('fetch success');
-        //         console.log(result);
-        //         self.appList = result.content;
-        //     },
-        //     (error) => {
-        //         console.log(error);
-        // });
     },
     methods: {
+        fetchRecord() {
+            let self = this;
+            axios.get('api/app?pageNumber=' + self.pageNumber, self.axiosConfig)
+                .then(function (response) {
+                    console.log(response);
+                    self.appList = response.data.content;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
     },
 }
 </script>

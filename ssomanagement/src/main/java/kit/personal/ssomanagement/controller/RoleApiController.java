@@ -20,13 +20,29 @@ import java.math.BigInteger;
 import java.util.*;
 
 @Controller
-@RequestMapping(value = "/api/role")
+@RequestMapping(value = "/api")
 public class RoleApiController {
 	@Autowired
 	AppUserRoleRepository roleRepository;
 	private static Logger LOG = LoggerFactory.getLogger(RoleApiController.class);
 
-	@RequestMapping( value = "/", method = {RequestMethod.POST, RequestMethod.PUT}, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@GetMapping( value = "/role", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Page<AppUserRole> getRoleList(
+			@RequestParam(value = "appId") String appId,
+			@RequestParam(value = "pageNumber", required = false, defaultValue = "0") String page,
+			@RequestParam(value = "pageSize", required = false, defaultValue = "10") String limit
+	){
+		int pageNum = Integer.valueOf(page);
+		int limitNum = Integer.valueOf(limit);
+		Sort sort = new Sort(Sort.Direction.DESC, "username");
+
+		Page<AppUserRole> roleList = roleRepository.findAllByAppId(appId, PageRequest.of(pageNum, limitNum, sort));
+		return roleList;
+	}
+
+	@RequestMapping( value = "/role", method = {RequestMethod.POST, RequestMethod.PUT}, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public AppUserRole createOrUpdate(
 			@RequestBody String jsonString
@@ -48,39 +64,24 @@ public class RoleApiController {
 		return appUserRole;
 	}
 
-	@GetMapping( value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping( value = "/role/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public AppUserRole read(
-			@RequestParam(value = "id") BigInteger id
+			@PathVariable(value = "id") BigInteger id
 	){
 		Optional<AppUserRole> optional = roleRepository.findById(id);
 		return optional.orElse(null);
 	}
 
-	@DeleteMapping( value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping( value = "/role/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Map<String, Boolean> delete(
-			@RequestParam(value = "id") BigInteger id
+			@PathVariable(value = "id") BigInteger id
 	){
 		roleRepository.deleteById(id);
 
 		Map<String, Boolean> ret = new HashMap<>();
 		ret.put("ret", true);
 		return ret;
-	}
-
-	@GetMapping( value = "/filerByAppId", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public Page<AppUserRole> filterByAppId(
-			@RequestParam(value = "appId") String appId,
-			@RequestParam(value = "page", required = false, defaultValue = "0") String page,
-			@RequestParam(value = "limit", required = false, defaultValue = "10") String limit
-	){
-		int pageNum = Integer.valueOf(page);
-		int limitNum = Integer.valueOf(limit);
-		Sort sort = new Sort(Sort.Direction.DESC, "username");
-
-		Page<AppUserRole> roleList = roleRepository.findAllByAppId(appId, PageRequest.of(pageNum, limitNum, sort));
-		return roleList;
 	}
 }

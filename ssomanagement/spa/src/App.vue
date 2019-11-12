@@ -1,14 +1,18 @@
 <template>
   <div id="app">
-<!--    <div id="nav">-->
-<!--      <router-link to="/">Home</router-link> |-->
-<!--      <router-link to="/about">About</router-link>-->
-<!--    </div>-->
-    <router-view/>
+    <div class="container">
+      <router-view/>
+    </div>
   </div>
 </template>
 
 <style>
+    .top-buffer{
+        margin-top: 1.1em;
+    }
+    .ssonav{
+        font-size: 2em;
+    }
 /*#app {*/
 /*  font-family: 'Avenir', Helvetica, Arial, sans-serif;*/
 /*  -webkit-font-smoothing: antialiased;*/
