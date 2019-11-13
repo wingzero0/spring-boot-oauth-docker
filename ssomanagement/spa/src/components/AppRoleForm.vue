@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12">
                 <router-link class="ssonav" v-bind:to="{ 'name': 'appRoleList', params:{ 'appId' : $route.params.appId }}">
-                    <ArrowLeft></ArrowLeft>{{ appId }}
+                    <ArrowLeftBold class="icon-2x"></ArrowLeftBold>{{ appId }}
                 </router-link>
             </div>
         </div>
@@ -35,10 +35,20 @@
 
     </div>
 </template>
+<style>
+  .material-design-icon.icon-2x {
+    height: 2em;
+    width: 2em;
+  }
+  .material-design-icon.icon-2x > .material-design-icon__svg {
+    height: 2em;
+    width: 2em;
+  }
+</style>
 <script>
     import axios from 'axios';
     import 'bootstrap/dist/css/bootstrap.css';
-    import ArrowLeft from 'vue-material-design-icons/ArrowLeft.vue';
+    import ArrowLeftBold from 'vue-material-design-icons/ArrowLeftBold.vue';
 
 
 
@@ -127,7 +137,7 @@
             }
         },
         components: {
-            ArrowLeft,
+            ArrowLeftBold,
         },
         watch:{
             '$route' (){

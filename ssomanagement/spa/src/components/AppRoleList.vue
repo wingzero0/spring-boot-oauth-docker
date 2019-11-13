@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12">
                 <router-link class="ssonav" v-bind:to="{ name: 'appList' }">
-                    <HomeIcon></HomeIcon>{{ appId }}
+                    <HomeIcon class="icon-2x"></HomeIcon>{{ appId }}
                 </router-link>
             </div>
         </div>
@@ -55,6 +55,16 @@
         </div>
     </div>
 </template>
+<style>
+  .material-design-icon.icon-2x {
+    height: 2em;
+    width: 2em;
+  }
+  .material-design-icon.icon-2x > .material-design-icon__svg {
+    height: 2em;
+    width: 2em;
+  }
+</style>
 <script>
     import axios from 'axios';
     import 'bootstrap/dist/css/bootstrap.css';
