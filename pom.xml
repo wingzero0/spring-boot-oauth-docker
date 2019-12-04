@@ -22,7 +22,7 @@
 <!--		<module>entity</module>-->
 		<module>ssoserver</module>
 		<module>ssoclient</module>
-<!--		<module>ssoresource</module>-->
+		<module>ssoresourceserver</module>
 <!--		<module>ssomanagement</module>-->
 	</modules>
 
