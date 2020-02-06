@@ -4,11 +4,13 @@ import kit.personal.ssoentity.entity.AppUserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
+@Repository
 public interface AppUserRoleRepository extends CrudRepository<AppUserRole, BigInteger> {
 	List<AppUserRole> findAllByUsername(String username);
 	List<AppUserRole> findAllByAppId(String app);
