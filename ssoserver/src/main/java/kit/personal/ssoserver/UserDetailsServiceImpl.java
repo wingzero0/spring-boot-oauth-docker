@@ -8,7 +8,6 @@ import java.util.Set;
 import kit.personal.ssoserver.entity.ActingRole;
 import kit.personal.ssoserver.entity.AppUser;
 import kit.personal.ssoserver.entity.AppUserRole;
-import kit.personal.ssoserver.entity.AuthUserAdapter;
 import kit.personal.ssoserver.repo.AppUserRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
 import kit.personal.ssoserver.repo.ActingRoleRepository;

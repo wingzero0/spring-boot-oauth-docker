@@ -2,7 +2,6 @@ package kit.personal.ssoserver;
 
 import kit.personal.ssoserver.entity.ActingRole;
 import kit.personal.ssoserver.entity.AppUserRole;
-import kit.personal.ssoserver.entity.AuthUserAdapter;
 import kit.personal.ssoserver.repo.ActingRoleRepository;
 import kit.personal.ssoserver.repo.AppUserRoleRepository;
 import org.slf4j.Logger;
