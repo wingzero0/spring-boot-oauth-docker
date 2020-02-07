@@ -1,7 +1,7 @@
 package kit.personal.ssomanagement.controller;
 
-import kit.personal.ssomanagement.entity.App;
-import kit.personal.ssomanagement.repo.AppRepository;
+import kit.personal.ssoentity.entity.App;
+import kit.personal.ssoentity.repo.AppRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

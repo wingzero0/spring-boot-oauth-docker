@@ -12,6 +12,16 @@ const routes = [
     component: AppList
   },
   {
+    path: '/appUserList/',
+    name: 'appUserList',
+    component: () => import('../components/AppUserList.vue')
+  },
+  {
+    path: '/appUserForm/:id',
+    name: 'appUserForm',
+    component: () => import('../components/AppUserForm.vue')
+  },
+  {
     path: '/appRole/:appId',
     name: 'appRoleList',
     component: () => import('../components/AppRoleList.vue')

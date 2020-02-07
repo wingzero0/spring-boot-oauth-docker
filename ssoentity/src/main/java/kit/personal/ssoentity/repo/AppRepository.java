@@ -1,13 +1,10 @@
-package kit.personal.ssomanagement.repo;
+package kit.personal.ssoentity.repo;
 
-
-import kit.personal.ssomanagement.entity.App;
+import kit.personal.ssoentity.entity.App;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
-import java.math.BigInteger;
-
-public interface AppRepository extends CrudRepository<App, BigInteger> {
+public interface AppRepository extends CrudRepository<App, Integer> {
 	Page<App> findAllBy(Pageable pageable);
 }
