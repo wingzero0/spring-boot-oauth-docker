@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import AppList from '../components/AppList.vue'
+import Landing from '../components/Landing.vue'
 // import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
@@ -8,11 +8,16 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'appList',
-    component: AppList
+    name: 'landing',
+    component: Landing
   },
   {
-    path: '/appUserList/',
+    path: '/appList',
+    name: 'appList',
+    component: () => import('../components/AppList.vue')
+  },
+  {
+    path: '/appUserList',
     name: 'appUserList',
     component: () => import('../components/AppUserList.vue')
   },

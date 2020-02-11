@@ -21,6 +21,10 @@
                 <input type="password" class="form-control" id="password" v-model="appUser.password"/>
             </div>
             <div class="form-group">
+                <label for="password">password (again)</label>
+                <input type="password" class="form-control" id="password" v-model="appUser.passwordAgain"/>
+            </div>
+            <div class="form-group">
                 <label for="email">email</label>
                 <input type="email" class="form-control" id="email" v-model="appUser.email"/>
             </div>
@@ -67,6 +71,7 @@
                     username:null,
                     displayName:null,
                     password:null,
+                    passwordAgain:null,
                     email:null,
                 },
                 axiosConfig: {
@@ -128,6 +133,15 @@
                 }
                 if (this.appUser.email === "" || this.appUser.email === null) {
                     this.errors.push('email could not empty');
+                }
+                if (this.appUser.password !== null && this.appUser.password !== "") {
+                    if (this.appUser.password !== this.appUser.passwordAgain){
+                        this.errors.push('password not match');
+                    }
+                }
+                let id = this.$route.params.id;
+                if (id === 'new' && (this.appUser.password === null || this.appUser.password === "") ){
+                    this.errors.push('password cannot be empty');
                 }
             }
         },

@@ -41,8 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             LOG.debug("disable auth");
         }
         http.authorizeRequests()
-                    .antMatchers("/userias").hasRole("IAS")
-                    .antMatchers("/usergoogle").hasRole("GOOGLE")
+                    .antMatchers("/api/**").hasRole("USER")
                     .antMatchers("/loginPage").permitAll()
                     .anyRequest().authenticated()
                 .and()

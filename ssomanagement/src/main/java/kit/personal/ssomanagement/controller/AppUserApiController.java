@@ -49,6 +49,8 @@ public class AppUserApiController {
 		if (web.getId() != null){
 			Optional<AppUser> optional = appUserRepo.findById(web.getId());
 			appUser = optional.orElseThrow(() -> new ResourceNotFoundException("app User does not exist"));
+		} else {
+			appUser = new AppUser();
 		}
 
 		appUser.setUsername(web.getUsername())
