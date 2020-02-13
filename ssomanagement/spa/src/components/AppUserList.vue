@@ -13,9 +13,10 @@
             <PlusBoxIcon></PlusBoxIcon>Add
         </router-link>
         <div class="row">
-            <div class="col-2">edit</div>
+            <div class="col-2">Action</div>
             <div class="col-2">Display Name</div>
             <div class="col-2">Username</div>
+            <div class="col-2">Email</div>
         </div>
         <div class="row" v-for="(appUser) in appUserList" v-bind:key="'appUser' + appUser.id">
             <div class="col-2">
@@ -25,6 +26,7 @@
             </div>
             <div class="col-2">{{appUser.displayName}}</div>
             <div class="col-2">{{appUser.username}}</div>
+            <div class="col-2">{{appUser.email}}</div>
         </div>
         <div class="">
             <nav aria-label="Page navigation example">
