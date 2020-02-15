@@ -131,9 +131,9 @@
                 if (this.appUser.displayName === "" || this.appUser.displayName === null) {
                     this.errors.push('displayName could not empty');
                 }
-                if (this.appUser.email === "" || this.appUser.email === null) {
-                    this.errors.push('email could not empty');
-                }
+                // if (this.appUser.email === "" || this.appUser.email === null) {
+                //     this.errors.push('email could not empty');
+                // }
                 if (this.appUser.password !== null && this.appUser.password !== "") {
                     if (this.appUser.password !== this.appUser.passwordAgain){
                         this.errors.push('password not match');
