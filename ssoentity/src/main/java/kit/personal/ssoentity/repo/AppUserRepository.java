@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface AppUserRepository extends CrudRepository<AppUser, BigInteger> {
     AppUser findOneByUsername(String username);
+    AppUser findOneByUsernameAndIsActive(String username, String isActive);
     AppUser findOneByEmail(String email);
     List<AppUser> findAllByUsernameIn(Collection<String> usernames);
     Page<AppUser> findAllBy(Pageable pageable);

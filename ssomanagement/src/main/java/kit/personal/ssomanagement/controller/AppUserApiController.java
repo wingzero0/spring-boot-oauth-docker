@@ -56,6 +56,7 @@ public class AppUserApiController {
 		appUser.setUsername(web.getUsername())
 				.setDisplayName(web.getDisplayName())
 				.setEmail(web.getEmail())
+				.setIsActive(web.getIsActive())
 				.setLastModifiedDate(new Date());
 
 		if (principal != null && principal.getName() != null){
