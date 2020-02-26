@@ -134,7 +134,8 @@ insert into oauth_client_details(client_id, resource_ids, client_secret, scope, 
 
 INSERT INTO app_user (id, username, password, email, display_name, is_active, last_modified_date, last_modified_by) VALUES (1,	'john',	/*456*/'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y',	'test@localhost.com', 'boss', 'Y', CURDATE(), 'sysadmin');
 INSERT INTO app_user (id, username, password, email, display_name, is_active, last_modified_date, last_modified_by) VALUES (2, 'john2', /*456*/'$2a$10$cNwLajdYxWN6ao1ynC0PBugoJqTr2krISx1FFEQ2n8eXX5S.5OW2y', 'test2@localhost.com', 'boss', 'Y', CURDATE(), 'sysadmin');
-INSERT INTO app_user_role (id, username, app_id, app_role, last_modified_date, last_modified_by) VALUES (1, 'john', 'spring-security-oauth2-read-write-client',  'readwriteclient', CURDATE(), 'sysadmin');
+INSERT INTO app_user_role (username, app_id, app_role, last_modified_date, last_modified_by) VALUES ('john', 'spring-security-oauth2-read-write-client',  'readwriteclient', CURDATE(), 'sysadmin');
+INSERT INTO app_user_role (username, app_id, app_role, last_modified_date, last_modified_by) VALUES ('john', 'ssomanagement',  'ADMIN', CURDATE(), 'sysadmin');
 INSERT INTO app_user_acting (id, from_date, to_date, username, acting_for_username, last_modified_date, last_modified_by) VALUES (1, '2019-03-22 00:00:00',  '2019-04-22 23:59:59',  'john2',  'john', CURDATE(), 'sysadmin');
 INSERT INTO app_user_acting (id, from_date, to_date, username, acting_for_username, last_modified_date, last_modified_by) VALUES (2, CURDATE(),  DATE_ADD(CURDATE(), INTERVAL 31 DAY),  'john2',  'john', CURDATE(), 'sysadmin');
 
