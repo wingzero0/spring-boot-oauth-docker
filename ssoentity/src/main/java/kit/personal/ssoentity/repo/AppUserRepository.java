@@ -16,5 +16,6 @@ public interface AppUserRepository extends CrudRepository<AppUser, BigInteger> {
     AppUser findOneByUsernameAndIsActive(String username, String isActive);
     AppUser findOneByEmail(String email);
     List<AppUser> findAllByUsernameIn(Collection<String> usernames);
+    Page<AppUser> findAllByUsernameContainsOrDisplayNameContains(String username, String displayName, Pageable pageable);
     Page<AppUser> findAllBy(Pageable pageable);
 }
