@@ -8,7 +8,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
     ports:
-      - 3306:3306
+      - 127.0.0.1:3306:3306
     volumes:
       - ./mariadb/conf.d:/etc/mysql/conf.d
       - ./mariadb/script/schema.sql:/docker-entrypoint-initdb.d/schema.sql
@@ -20,7 +20,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8120:8080
+      - 127.0.0.1:8120:8080
 
 #  node1:
 #    image: maven-xserver # or maven:3.6.0-jdk-11 if you run without IDE
