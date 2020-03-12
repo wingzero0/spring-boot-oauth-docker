@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Landing from '../components/Landing.vue'
 // import Home from '../views/Home.vue'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,11 @@ const routes = [
     component: () => import('../components/AppRoleForm.vue')
   },
   {
+      path: '/appDetailForm',
+      name: 'appDetailForm',
+      component: () => import('../views/AppDetailForm.vue')
+    },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting
@@ -55,6 +61,16 @@ const router = new VueRouter({
   // mode: 'history',
   // base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+    if (store.state.fetched === false) {
+        store.dispatch('getToken').then(() => {
+            next();
+        });
+    } else {
+        next();
+    }
 })
 
 export default router
