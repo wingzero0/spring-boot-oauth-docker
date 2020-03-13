@@ -43,7 +43,7 @@ const routes = [
     component: () => import('../components/AppRoleForm.vue')
   },
   {
-      path: '/appDetailForm',
+      path: '/appDetailForm/:clientId',
       name: 'appDetailForm',
       component: () => import('../views/AppDetailForm.vue')
     },

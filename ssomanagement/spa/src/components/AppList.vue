@@ -16,10 +16,13 @@
         <hr/>
         <div v-bind:key="index" v-for="(app,index) in appList">
             <div class="row top-buffer">
-                <div class="col-md-2">
-                    <router-link :to='{name:"appRoleList", params:{appId : app.clientId }}' class="btn btn-primary" role="button">Edit</router-link>
+                <div class="col-md-1">
+                    <router-link :to='{name:"appDetailForm", params:{clientId : app.clientId }}' class="btn btn-primary" role="button">Edit</router-link>
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-1">
+                    <router-link :to='{name:"appRoleList", params:{appId : app.clientId }}' class="btn btn-primary" role="button">Role</router-link>
+                </div>
+                <div class="col-md-8">
                     <router-link :to='{name:"appRoleList", params:{appId : app.clientId }}' >{{app.clientId}}</router-link>
                 </div>
             </div>
