@@ -2,11 +2,18 @@
     <div>
         <div class="row">
             <div class="col-12">
-                <router-link class="ssonav" v-bind:to="{ 'name': 'appRoleList', params:{ 'appId' : $route.params.appId }}">
-                    <ArrowLeftBold class="icon-2x"></ArrowLeftBold>{{ appId }}
-                </router-link>
+                <a class="ssonav" href="#" v-on:click="back">
+                    <ArrowLeftBold class="icon-2x"></ArrowLeftBold>{{ appName }}
+                </a>
             </div>
         </div>
+        <hr/>
+        <div class="row">
+            <div class="col-12">
+                <h1>App Role</h1>
+            </div>
+        </div>
+        <hr/>
         <form>
             <div class="form-group">
                 <label for="username">Username</label>
@@ -22,10 +29,7 @@
             <div class="row">
                 <div class="col-12">
                     <a class="btn btn-primary" href="#" role="button" v-on:click="save">Save</a>
-                    <router-link class="btn btn-default" role="button"
-                                 v-bind:to="{ 'name': 'appRoleList', params:{ 'appId' : $route.params.appId }}">
-                        Cancel
-                    </router-link>
+                    <a class="btn btn-default" href="#" role="button" v-on:click="back">Cancel</a>
                 </div>
             </div>
 
@@ -73,6 +77,11 @@
                 },
                 appUserList:[],
                 errors:[],
+            }
+        },
+        computed: {
+            appName: function(){
+                return this.$route.params.appName;
             }
         },
         mounted: function(){
@@ -134,7 +143,7 @@
                 axios.post('api/role/', self.appUserRole, self.axiosConfig)
                     .then(function (response) {
                         console.log(response.data);
-                        self.$router.push({ name: 'appRoleList', params:{appId: self.appId}});
+                        self.backPage();
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -155,7 +164,14 @@
                 if (this.appUserRole.appRole === "" || this.appUserRole.appRole === null) {
                     this.errors.push('appRole could not empty');
                 }
-            }
+            },
+            back(event){
+                event.preventDefault();
+                this.backPage();
+            },
+            backPage(){
+                this.$router.go(-1);
+            },
         },
         components: {
             ArrowLeftBold,

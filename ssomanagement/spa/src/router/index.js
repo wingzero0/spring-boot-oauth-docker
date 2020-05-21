@@ -33,17 +33,17 @@ const routes = [
     component: () => import('../components/AppUserFormSelf.vue')
   },
   {
-    path: '/appRole/:appId',
+    path: '/appRole/:appId/:appName',
     name: 'appRoleList',
     component: () => import('../components/AppRoleList.vue')
   },
   {
-    path: '/appRoleForm/:appId/:id',
+    path: '/appRoleForm/:appId/:appName/:id',
     name: 'appRoleForm',
     component: () => import('../components/AppRoleForm.vue')
   },
   {
-      path: '/appDetailForm/:clientId',
+      path: '/appDetailForm/:clientId/:appName',
       name: 'appDetailForm',
       component: () => import('../views/AppDetailForm.vue')
     },

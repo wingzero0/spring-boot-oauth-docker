@@ -1,4 +1,4 @@
 use oauth2;
 
-ALTER TABLE `app_user`
-ADD `is_active` varchar(256) DEFAULT 'Y' AFTER `display_name`;
+ALTER TABLE `oauth_client_details`
+ADD `display_name` varchar(256) COLLATE 'utf8_bin' NULL;

@@ -22,7 +22,7 @@
             </div>
             <div class="form-group">
                 <label for="password">密碼 (重複)</label>
-                <input type="password" class="form-control" id="password" v-model="appUser.passwordAgain"/>
+                <input type="password" class="form-control" id="passwordAgain" v-model="appUser.passwordAgain"/>
             </div>
             <div class="form-group">
                 <label for="email">email</label>

@@ -5,7 +5,7 @@
 
 	<groupId>kit.personal</groupId>
 	<artifactId>ssomanagement</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.0</version>
 	<packaging>war</packaging>
 
 	<name>ssomanagement</name>
@@ -102,6 +102,12 @@
 			<id>devvue</id>
 			<properties>
 				<active.profile>devvue</active.profile>
+			</properties>
+		</profile>
+		<profile>
+			<id>devvue2</id>
+			<properties>
+				<active.profile>devvue2</active.profile>
 			</properties>
 		</profile>
 	</profiles>

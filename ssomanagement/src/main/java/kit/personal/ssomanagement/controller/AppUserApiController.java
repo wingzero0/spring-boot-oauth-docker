@@ -90,4 +90,12 @@ public class AppUserApiController {
 		Sort sort = Sort.by(Sort.Direction.DESC, "username");
 		return appUserRepo.findAllByUsernameContainsOrDisplayNameContains(name, name, PageRequest.of(pageNum, limitNum, sort));
 	}
+
+	@GetMapping( value = "/appUserByUsername/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public AppUser getByUsername(
+			@PathVariable(value = "username") String username
+	){
+		return appUserRepo.findOneByUsername(username);
+	}
 }

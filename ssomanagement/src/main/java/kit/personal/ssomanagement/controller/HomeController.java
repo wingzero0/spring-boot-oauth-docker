@@ -2,6 +2,8 @@ package kit.personal.ssomanagement.controller;
 
 import kit.personal.ssoentity.entity.AppUserRole;
 import kit.personal.ssoentity.repo.AppUserRoleRepository;
+import kit.personal.ssomanagement.security.LoginInfo;
+import kit.personal.ssomanagement.utility.LoginChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +35,7 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class HomeController{
@@ -47,19 +46,14 @@ public class HomeController{
     private boolean isDisableAPIAuth;
 
     @Autowired
+    LoginChecker loginChecker;
+
+    @Autowired
     AppUserRoleRepository roleRepo;
 
     @Autowired
     private OAuth2AuthorizedClientService authorizedClientService;
     private static Logger LOG = LoggerFactory.getLogger(HomeController.class);
-
-
-//    @GetMapping("/")
-//    @ResponseBody
-//    public String index() {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        return auth.getPrincipal().getClass().toGenericString() + "--------" + auth.getPrincipal().toString();
-//    }
 
     @GetMapping(value = "/api/appUserRole/{appId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -173,5 +167,15 @@ public class HomeController{
     private OAuth2AuthorizedClient getAuthorizedClient(OAuth2AuthenticationToken authentication) {
         return this.authorizedClientService.loadAuthorizedClient(
                 authentication.getAuthorizedClientRegistrationId(), authentication.getName());
+    }
+
+    @GetMapping(value = "/api/loginInfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public LoginInfo getLoginInfo(
+            Authentication auth
+    ){
+        Collection<? extends GrantedAuthority> authorities = loginChecker.getGrantedAuthorities(auth);
+        String loginName = loginChecker.getLoginName(auth);
+        return (new LoginInfo()).setGrantedAuthorities(authorities).setName(loginName);
     }
 }

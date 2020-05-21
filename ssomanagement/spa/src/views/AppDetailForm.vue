@@ -1,9 +1,21 @@
 <template>
     <div>
+        <div class="row">
+            <div class="col-12">
+                <router-link class="ssonav" v-bind:to="{ name: 'appList' }">
+                    <ArrowLeftBold class="icon-2x"></ArrowLeftBold>{{ appName }}
+                </router-link>
+            </div>
+        </div>
+        <hr/>
         <form>
             <div class="form-group">
                 <label for="clientId">clientId</label>
                 <input type="text" class="form-control" id="clientId" v-model="appDetail.clientId"/>
+            </div>
+            <div class="form-group">
+                <label for="displayName">displayName</label>
+                <input type="text" class="form-control" id="displayName" v-model="appDetail.displayName"/>
             </div>
             <div class="form-group">
                 <label for="resourceIds">resourceIds</label>
@@ -51,7 +63,8 @@
                 <label for="autoapprove">autoapprove</label>
                 <input type="text" class="form-control" id="autoapprove" v-model="appDetail.autoapprove"/>
             </div>
-            <a href="#save" v-on:click="save">save</a>
+            <a class="btn btn-primary" role="button" href="#save" v-on:click="save">Save</a>
+            <a class="btn btn-default" role="button" href="#save" v-on:click="back">Cancel</a>
         </form>
     </div>
 </template>
@@ -66,8 +79,8 @@
   }
 </style>
 <script>
-    import 'bootstrap/dist/css/bootstrap.css';
     import axios from 'axios';
+    import ArrowLeftBold from 'vue-material-design-icons/ArrowLeftBold.vue';
 
     export default {
         name: 'AppDetailForm',
@@ -88,6 +101,11 @@
                 },
                 showClientSecret:false,
             };
+        },
+        computed: {
+            appName: function(){
+                return this.$route.params.appName;
+            }
         },
         mounted: function(){
             this.fetchRecord();
@@ -135,11 +153,22 @@
                 axios.post('api/app', self.appDetail, axiosConfig)
                     .then(function (response) {
                         console.log(response.data);
+                        self.backPage();
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
+            back(event){
+                event.preventDefault();
+                this.backPage();
+            },
+            backPage(){
+                this.$router.go(-1);
+            },
+        },
+        components: {
+            ArrowLeftBold,
         },
         watch:{
             '$route' (){

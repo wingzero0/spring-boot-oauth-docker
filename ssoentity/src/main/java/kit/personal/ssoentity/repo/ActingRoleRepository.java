@@ -14,6 +14,9 @@ public interface ActingRoleRepository extends CrudRepository<ActingRole, Integer
     @Query(value = "select r from ActingRole r where r.pk.username = ?1 and r.pk.fromDate <= ?2 and r.pk.toDate >= ?2")
     List<ActingRole> findAllByPkUsernameAndDate(String username, Date testDate);
 
+    @Query(value = "select r from ActingRole r where r.pk.username = ?1 and r.pk.fromDate <= ?2 and r.pk.toDate >= ?2 and r.appRole like ?3")
+    List<ActingRole> findAllByPkUsernameAndDateAndAppRoleLike(String username, Date testDate, String role);
+
     @Query(value = "select r from ActingRole r where r.appId = ?1 and r.pk.fromDate <= ?2 and r.pk.toDate >= ?2")
     List<ActingRole> findAllByAppIdAndDate(String appId, Date testDate);
 

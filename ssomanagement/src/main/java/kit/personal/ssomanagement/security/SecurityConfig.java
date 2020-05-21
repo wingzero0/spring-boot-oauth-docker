@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
         http.authorizeRequests()
                     .antMatchers("/api/csrf-token").hasAnyRole("ADMIN", "USER")
-                    .antMatchers("/api/**").hasRole("ADMIN")
+                    .antMatchers("/api/**").hasAnyRole("ADMIN", "APP_ADMIN")
                     .antMatchers("/selfServiceApi/**").hasRole("USER")
                     .antMatchers("/loginPage").permitAll()
                     .anyRequest().authenticated()
@@ -76,6 +76,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 Map<String, String> innerMap = (Map<String, String>) obj;
                 if (innerMap.get("authority").contains(ssoClientId + "_ADMIN")){
                     mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                }
+                if (innerMap.get("authority").contains("_ADMIN")){
+                    mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_APP_ADMIN"));
                 }
                 mappedAuthorities.add(new SimpleGrantedAuthority(innerMap.get("authority")));
             }

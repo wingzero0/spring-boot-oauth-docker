@@ -20,6 +20,7 @@ public class App {
 	private Integer refreshTokenValidity;
 	private String additionalInformation;
 	private String autoapprove;
+	private String displayName;
 
 	public String getClientId() {
 		return clientId;
@@ -117,6 +118,15 @@ public class App {
 
 	public App setAutoapprove(String autoapprove) {
 		this.autoapprove = autoapprove;
+		return this;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public App setDisplayName(String displayName) {
+		this.displayName = displayName;
 		return this;
 	}
 }
