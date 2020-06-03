@@ -1,8 +1,10 @@
 package kit.personal.ssoserver;
 
+import kit.personal.ssoentity.entity.App;
 import kit.personal.ssoentity.entity.AppUser;
 import kit.personal.ssoentity.entity.AppUserActing;
 import kit.personal.ssoentity.entity.AppUserRole;
+import kit.personal.ssoentity.repo.AppRepository;
 import kit.personal.ssoentity.repo.AppUserActingRepository;
 import kit.personal.ssoentity.repo.AppUserRepository;
 import kit.personal.ssoentity.repo.AppUserRoleRepository;
@@ -56,6 +58,8 @@ public class SsoserverApplicationTests {
 	private AppUserRoleRepository appUserRoleRepository;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private AppRepository appRepo;
 
 	@Test
 	public void testFetchData() {
@@ -186,6 +190,7 @@ public class SsoserverApplicationTests {
 
 	@Before
 	public void setUp() throws Exception {
+		//this.setUpApp();
 		Date now = new Date();
 		this.appUserRepository.deleteAll();
 		AppUser user1 = new AppUser();
@@ -237,6 +242,24 @@ public class SsoserverApplicationTests {
 			.setLastModifiedBy("systemadmin")
 		;
 		this.appUserRoleRepository.save(role);
+	}
+
+	private void setUpApp() throws Exception {
+		this.appRepo.deleteAll();
+		App app = new App();
+		app.setClientId("spring-security-oauth2-read-write-client")
+			.setResourceIds("spring-security-oauth2-resource")
+			.setClientSecret("$2a$04$soeOR.QFmClXeFIrhJVLWOQxfHjsJLSpWrU1iGxcMGdu.a5hvfY4W")
+			.setScope("read,write,full_user_list,user_management")
+			.setAuthorizedGrantTypes("password,authorization_code,refresh_token,implicit,client_credentials")
+			.setWebServerRedirectUri("http://localhost:8082/something/login/oauth2/code/my-client-2,")
+			.setAuthorities("user")
+			.setAccessTokenValidity(10800)
+			.setRefreshTokenValidity(2592000)
+			.setAdditionalInformation(null)
+			.setAutoapprove("read,write")
+			.setDisplayName("UNIT test app");
+		this.appRepo.save(app);
 	}
 
 }
