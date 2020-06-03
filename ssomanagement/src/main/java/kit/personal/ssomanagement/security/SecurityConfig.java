@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             LOG.debug("disable auth");
         }
         http.authorizeRequests()
-                    .antMatchers("/api/csrf-token").hasAnyRole("ADMIN", "USER")
+                    .antMatchers("/api/csrf-token").hasAnyRole("ADMIN", "APP_ADMIN", "USER")
                     .antMatchers("/api/**").hasAnyRole("ADMIN", "APP_ADMIN")
                     .antMatchers("/selfServiceApi/**").hasRole("USER")
                     .antMatchers("/loginPage").permitAll()
@@ -74,13 +74,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             List<Object> objList = (List<Object>)stringObjectMap.get("authorities");
             for(Object obj: objList){
                 Map<String, String> innerMap = (Map<String, String>) obj;
-                if (innerMap.get("authority").contains(ssoClientId + "_ADMIN")){
+                String checkedRole =  innerMap.get("authority").toUpperCase();
+                String currentAppAdmin = (ssoClientId + "_ADMIN").toUpperCase();
+                if (checkedRole.contains(currentAppAdmin)){
                     mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
                 }
-                if (innerMap.get("authority").contains("_ADMIN")){
+                if (checkedRole.contains("_ADMIN")){
                     mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_APP_ADMIN"));
                 }
-                mappedAuthorities.add(new SimpleGrantedAuthority(innerMap.get("authority")));
+                mappedAuthorities.add(new SimpleGrantedAuthority(checkedRole));
             }
             oAuth2User = new DefaultOAuth2User(mappedAuthorities, oAuth2User.getAttributes(), "name");
 

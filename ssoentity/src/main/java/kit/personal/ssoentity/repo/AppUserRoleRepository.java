@@ -16,7 +16,7 @@ public interface AppUserRoleRepository extends CrudRepository<AppUserRole, BigIn
 	List<AppUserRole> findAllByAppId(String app);
 	Page<AppUserRole> findAllByAppId(String app, Pageable pageable);
 	List<AppUserRole> findAllByAppIdAndAppRole(String appId, String role);
-	List<AppUserRole> findAllByUsernameAndAppRole(String username, String role);
+	List<AppUserRole> findAllByUsernameAndAppRoleIgnoreCase(String username, String role);
 	List<AppUserRole> findAllByAppIdAndUsername(String appId, String username);
 	List<AppUserRole> findAllByAppIdAndUsernameIn(String appId, Collection<String> usernames);
 	long countByAppIdAndUsernameAndAppRole(String appId, String username, String role);

@@ -50,14 +50,14 @@ public class AppApiController {
 		}
 
 		Date today = this.getDateTruncateTime(new Date());
-		List<ActingRole> actingRoleList = actingRoleRepository.findAllByPkUsernameAndDateAndAppRoleLike(
+		List<ActingRole> actingRoleList = actingRoleRepository.findAllByPkUsernameAndDateAndAppRoleIgnoreCase(
 				loginChecker.getLoginName(auth), today, "ADMIN");
 		Set<String> appIds = new HashSet<>();
 		for (ActingRole actingRole : actingRoleList){
 			appIds.add(actingRole.getAppId());
 		}
 
-		List<AppUserRole> appUserRoleList = appUserRoleRepository.findAllByUsernameAndAppRole(
+		List<AppUserRole> appUserRoleList = appUserRoleRepository.findAllByUsernameAndAppRoleIgnoreCase(
 				loginChecker.getLoginName(auth), "ADMIN");
 
 		for (AppUserRole appUserRole : appUserRoleList){
