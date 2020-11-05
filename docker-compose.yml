@@ -51,7 +51,8 @@ services:
 #      - 8081:8081
 
   compiler:
-    image: wingzzz2003/codeserver # or maven:3.6.0-jdk-11 if you run without IDE
+    #image: wingzzz2003/codeserver # or maven:3.6.0-jdk-11 if you run without IDE
+    image: maven:3.6-jdk-11
     volumes:
       - /opt/data/codeserver:/root/
       - ./:/root/external
@@ -59,7 +60,8 @@ services:
       - 443:443
       - 3000:3000
       - "8080-8090:8080-8090"
-    entrypoint: code-server
+    #entrypoint: code-server
+    command: bash
     stdin_open: true
     tty: true
     working_dir: /root
