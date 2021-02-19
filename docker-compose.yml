@@ -13,8 +13,6 @@ services:
       - ./mariadb/conf.d:/etc/mysql/conf.d
       - ./mariadb/script/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     working_dir: /app/
-    #command: ['mysql', '-u', 'root', '-pexample' , '<', 'schema.sql']
-    #command: mysql -u root -pexample < schema.sql
   
   adminer:
     image: adminer
@@ -51,17 +49,16 @@ services:
 #      - 8081:8081
 
   compiler:
-    #image: wingzzz2003/codeserver # or maven:3.6.0-jdk-11 if you run without IDE
-    image: maven:3.6-jdk-11
+    image: wingzzz2003/codeserver:3.9.0 # or maven:3.6.0-jdk-11 if you run without IDE
+    #image: maven:3.6-jdk-11
     volumes:
       - /opt/data/codeserver:/root/
       - ./:/root/external
     ports:
-      - 443:443
-      - 3000:3000
+      - "3000:3000"
       - "8080-8090:8080-8090"
-    #entrypoint: code-server
-    command: bash
+      - "9000:9000"
+    command: code-server
     stdin_open: true
     tty: true
     working_dir: /root
