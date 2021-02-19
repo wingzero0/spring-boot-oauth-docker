@@ -21,7 +21,7 @@
 		<module>ssoentity</module>
 		<module>ssoserver</module>
 		<module>ssoclient</module>
-		<!-- <module>ssoresourceserver</module> -->
+		<module>ssoresourceserver</module>
 		<module>ssomanagement</module>
 	</modules>
 

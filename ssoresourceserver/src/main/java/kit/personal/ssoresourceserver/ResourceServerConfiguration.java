@@ -1,52 +1,30 @@
 package kit.personal.ssoresourceserver;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import javax.sql.DataSource;
-
-@Configuration
-@PropertySource({ "classpath:persistence.properties" })
-@EnableResourceServer
-public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
-    @Autowired
-    private Environment env;
-
-    @Override
-    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        String resourceIds= "resource-server-rest-api";
-        resources.resourceId(resourceIds).tokenStore(this.tokenStore());
-    }
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http.requestMatchers()
-                .antMatchers("/user/**", "/app/**")
-                .and()
-                .authorizeRequests().anyRequest().authenticated();
-    }
-
-    @Bean
-    public TokenStore tokenStore() {
-        return new JdbcTokenStore(dataSource());
-    }
-
-    private DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setUsername(env.getProperty("jdbc.user"));
-        dataSource.setPassword(env.getProperty("jdbc.pass"));
-        return dataSource;
+@EnableWebSecurity
+public class ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
+    @Value("${oauth.check_token.uri}")
+    private String checkTokenUri;
+    protected void configure(HttpSecurity http) {
+        try {
+            http.authorizeRequests(
+                    authorizeRequests -> authorizeRequests
+                        .mvcMatchers("/user/read").hasAuthority("SCOPE_read")
+                        .mvcMatchers("/user/write").hasAuthority("SCOPE_write")
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(
+                    oauth2 -> oauth2
+                        .opaqueToken(opaqueToken -> opaqueToken
+                        .introspectionUri(checkTokenUri)
+                        .introspectionClientCredentials("spring-security-oauth2-read-write-client", "spring-security-oauth2-read-write-client-password1234")
+                    ));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
