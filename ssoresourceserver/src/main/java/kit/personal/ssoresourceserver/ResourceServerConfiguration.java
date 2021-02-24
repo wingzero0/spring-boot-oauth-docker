@@ -13,8 +13,10 @@ public class ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
         try {
             http.authorizeRequests(
                     authorizeRequests -> authorizeRequests
-                        .mvcMatchers("/user/read").hasAuthority("SCOPE_read")
-                        .mvcMatchers("/user/write").hasAuthority("SCOPE_write")
+                        .antMatchers("/user/read").hasAuthority("SCOPE_read")
+                        .antMatchers("/user/write").hasAuthority("SCOPE_write")
+                        // .antMatchers("/user/read").hasAuthority("#oauth2.hasScope('read')")
+                        // .antMatchers("/user/write").hasAuthority("#oauth2.hasScope('write')")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(
                     oauth2 -> oauth2

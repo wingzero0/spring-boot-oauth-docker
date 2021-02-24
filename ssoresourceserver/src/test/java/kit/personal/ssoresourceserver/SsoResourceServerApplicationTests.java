@@ -5,13 +5,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import javax.transaction.Transactional;
-
 
 @SpringBootTest
 @TestPropertySource(locations="classpath:test.properties")
 @AutoConfigureMockMvc
-@Transactional
 public class SsoResourceServerApplicationTests {
 	@Test
 	public void dummyTest() {
