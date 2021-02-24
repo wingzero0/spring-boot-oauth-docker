@@ -58,6 +58,7 @@ public class CustomIntrospector implements OpaqueTokenIntrospector {
             .uri(URI.create(this.uri))
             .timeout(Duration.ofMinutes(2))
             .POST(this.buildFormDataFromMap(data))
+            .header("Content-Type", "application/x-www-form-urlencoded")
             .build();
         HttpResponse<String> httpResponse = null;
         try {
