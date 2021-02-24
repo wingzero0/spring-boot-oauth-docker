@@ -1,9 +1,11 @@
 package kit.personal.ssoresourceserver;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 
 @EnableWebSecurity
 public class ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
@@ -20,13 +22,15 @@ public class ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(
                     oauth2 -> oauth2
-                        .opaqueToken(opaqueToken -> opaqueToken
-                        .introspectionUri(checkTokenUri)
-                        .introspectionClientCredentials("spring-security-oauth2-read-write-client", "spring-security-oauth2-read-write-client-password1234")
+                        .opaqueToken(opaqueToken -> opaqueToken.introspector(introspector())                        
                     ));
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+    @Bean
+    public OpaqueTokenIntrospector introspector() {
+        return new CustomIntrospector(checkTokenUri, "spring-security-oauth2-read-write-client", "spring-security-oauth2-read-write-client-password1234");
     }
 }
