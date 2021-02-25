@@ -5,7 +5,7 @@
 
 	<groupId>kit.personal.sso</groupId>
 	<artifactId>ssoresourceserver</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.0</version>
 	<packaging>war</packaging>
 
 	<name>ssoresourceserver</name>

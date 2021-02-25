@@ -17,8 +17,6 @@ public class ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
                     authorizeRequests -> authorizeRequests
                         .antMatchers("/user/read").hasAuthority("SCOPE_read")
                         .antMatchers("/user/write").hasAuthority("SCOPE_write")
-                        // .antMatchers("/user/read").hasAuthority("#oauth2.hasScope('read')")
-                        // .antMatchers("/user/write").hasAuthority("#oauth2.hasScope('write')")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(
                     oauth2 -> oauth2
@@ -31,6 +29,6 @@ public class ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
     }
     @Bean
     public OpaqueTokenIntrospector introspector() {
-        return new CustomIntrospector(checkTokenUri, "spring-security-oauth2-read-write-client", "spring-security-oauth2-read-write-client-password1234");
+        return new CustomIntrospector(checkTokenUri);
     }
 }

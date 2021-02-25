@@ -28,13 +28,9 @@ import kit.personal.CheckTokenResponse;
 
 public class CustomIntrospector implements OpaqueTokenIntrospector {
     private static Logger LOG = LoggerFactory.getLogger(CustomIntrospector.class);
-    private String uri;
-    private String clientId;
-    private String secret;
-    public CustomIntrospector(String uri, String clientId, String secret){
-        this.uri = uri;
-        this.clientId = clientId;
-        this.secret = secret;
+    private String checkTokenUri;
+    public CustomIntrospector(String uri){
+        this.checkTokenUri = uri;
     }
     @Override
     public OAuth2AuthenticatedPrincipal introspect(String token) {
@@ -55,7 +51,7 @@ public class CustomIntrospector implements OpaqueTokenIntrospector {
         Map<Object, Object> data = new HashMap<>();
         data.put("token", token);
         HttpRequest checkTokenRequest = HttpRequest.newBuilder()
-            .uri(URI.create(this.uri))
+            .uri(URI.create(this.checkTokenUri))
             .timeout(Duration.ofMinutes(2))
             .POST(this.buildFormDataFromMap(data))
             .header("Content-Type", "application/x-www-form-urlencoded")
