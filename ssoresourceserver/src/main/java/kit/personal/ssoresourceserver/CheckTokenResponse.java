@@ -1,9 +1,8 @@
-package kit.personal;
+package kit.personal.ssoresourceserver;
 
-import java.math.BigInteger;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-// import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,13 +13,19 @@ public class CheckTokenResponse {
     public String user_name;
     public Set<String> scope;
     public boolean active;
-    public BigInteger exp;
+    public Long exp;
     public Set<String> authorities;
     public String client_id;
-    public Map<String, Object> getMap(){
+
+    public Map<String, Object> getMap() {
         Map<String, Object> map = new HashMap<String, Object>();
+        map.put("aud", aud);
         map.put("user_name", user_name);
         map.put("scope", scope);
+        map.put("active", active);
+        map.put("exp", Instant.ofEpochSecond(exp));
+        map.put("authorities", authorities);
+        map.put("client_id", client_id);
         return map;
     }
 }

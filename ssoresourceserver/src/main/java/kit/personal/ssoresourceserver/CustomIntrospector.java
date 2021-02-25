@@ -24,8 +24,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 
-import kit.personal.CheckTokenResponse;
-
 public class CustomIntrospector implements OpaqueTokenIntrospector {
     private static Logger LOG = LoggerFactory.getLogger(CustomIntrospector.class);
     private String checkTokenUri;
