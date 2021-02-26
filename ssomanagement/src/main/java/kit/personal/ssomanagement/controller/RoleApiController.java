@@ -1,20 +1,5 @@
 package kit.personal.ssomanagement.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kit.personal.ssomanagement.controller.exception.WrongParameterException;
-import kit.personal.ssoentity.entity.AppUserRole;
-import kit.personal.ssoentity.repo.AppUserRoleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Date;
@@ -22,11 +7,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import kit.personal.ssoentity.entity.AppUserRole;
+import kit.personal.ssoentity.repo.AppUserRoleRepository;
+import kit.personal.ssomanagement.controller.exception.WrongParameterException;
+
 @Controller
 @RequestMapping(value = "/api")
 public class RoleApiController {
 	@Autowired
 	AppUserRoleRepository roleRepository;
+	@SuppressWarnings("unused")
 	private static Logger LOG = LoggerFactory.getLogger(RoleApiController.class);
 
 

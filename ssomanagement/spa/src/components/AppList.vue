@@ -6,6 +6,10 @@
             </div>
         </div>
         <hr/>
+        <router-link :to='{name:"appDetailForm", params:{clientId : "new", appName: "draft" }}'>
+            <PlusBoxIcon></PlusBoxIcon>Add
+        </router-link>
+        <hr/>
         <div v-bind:key="index" v-for="(app,index) in appList">
             <div class="row top-buffer">
                 <div class="col-md-1" v-if="isAdmin()">
@@ -24,9 +28,13 @@
 <script>
 import axios from 'axios';
 import {isAdminCheck} from '@/utils/utilsFunction.js';
+import PlusBoxIcon from 'vue-material-design-icons/PlusBox.vue';
 
 export default {
     name: 'AppList',
+    components:{
+        PlusBoxIcon,
+    },
     data: function(){
         return{
             pageNumber: 0,
@@ -65,8 +73,6 @@ export default {
         updateAppName(appName){
             this.$store.commit('updateAppName', appName);
         },
-    },
-    components: {
     },
 }
 </script>
