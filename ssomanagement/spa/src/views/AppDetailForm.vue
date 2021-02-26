@@ -102,10 +102,11 @@
                     authorizedGrantTypes: null,
                     webServerRedirectUri: null,
                     authorities: null,
-                    accessTokenValidity: null,
-                    refreshTokenValidity: null,
+                    accessTokenValidity: 10800,
+                    refreshTokenValidity: 2592000,
                     additionalInformation: null,
                     autoapprove: null,
+                    updateClientSecret: false,
                 },
                 showClientSecret:false,
             };
@@ -145,9 +146,6 @@
                 if (this.appDetail.refreshTokenValidity == null || this.appDetail.refreshTokenValidity == ""){
                     this.errors.push("refreshTokenValidity cannot be empty");
                 }
-                if (this.appDetail.additionalInformation == null || this.appDetail.additionalInformation == ""){
-                    this.errors.push("additionalInformation cannot be empty");
-                }
             },
             generatePassword(event, length){
                 event.preventDefault();
@@ -158,6 +156,7 @@
                   result += characters.charAt(Math.floor(Math.random() * charactersLength));
                 }
                 this.appDetail.clientSecret = result;
+                this.appDetail.updateClientSecret = true;
                 this.showClientSecret = true;
             },
             fetchRecord: function(){

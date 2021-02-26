@@ -93,7 +93,9 @@ public class AppApiController {
 	){
 		//TODO need to skip password if if is not updated
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
-		app.setClientSecret(encoder.encode(app.getClientSecret()));
+		if (app.isUpdateClientSecret()){
+			app.setClientSecret(encoder.encode(app.getClientSecret()));
+		}
 		appRepository.save(app);
 		return app;
 	}
