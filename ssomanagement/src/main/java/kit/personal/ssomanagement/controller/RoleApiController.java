@@ -36,6 +36,8 @@ public class RoleApiController {
 	@ResponseBody
 	public Page<AppUserRole> getRoleList(
 			@RequestParam(value = "appId") String appId,
+			@RequestParam(value = "appRole", required = false, defaultValue = "") String appRole,
+			@RequestParam(value = "username", required = false, defaultValue = "") String username,
 			@RequestParam(value = "pageNumber", required = false, defaultValue = "0") String page,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "10") String limit
 	){
@@ -43,7 +45,8 @@ public class RoleApiController {
 		int limitNum = Integer.valueOf(limit);
 		Sort sort = Sort.by(Sort.Direction.DESC, "username");
 
-		Page<AppUserRole> roleList = roleRepository.findAllByAppId(appId, PageRequest.of(pageNum, limitNum, sort));
+		Page<AppUserRole> roleList = roleRepository.findAllByAppIdAndAppRoleContainsAndUsernameContains(
+			appId, appRole, username, PageRequest.of(pageNum, limitNum, sort));
 		return roleList;
 	}
 
