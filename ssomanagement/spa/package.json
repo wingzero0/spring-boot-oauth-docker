@@ -1,6 +1,6 @@
 {
-  "name": "spa",
-  "version": "0.2.0",
+  "name": "ssomanagementui",
+  "version": "0.4.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

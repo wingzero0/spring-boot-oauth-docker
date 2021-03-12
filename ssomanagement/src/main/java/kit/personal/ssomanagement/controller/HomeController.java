@@ -150,20 +150,6 @@ public class HomeController{
         return ret;
     }
 
-    @GetMapping("/userias")
-    @ResponseBody
-    public String userias(OAuth2AuthenticationToken authentication) {
-        String ret = "you have role ias";
-        return ret;
-    }
-
-    @GetMapping("/usergoogle")
-    @ResponseBody
-    public String usergoogle(OAuth2AuthenticationToken authentication) {
-        String ret = "you have role google";
-        return ret;
-    }
-
     private OAuth2AuthorizedClient getAuthorizedClient(OAuth2AuthenticationToken authentication) {
         return this.authorizedClientService.loadAuthorizedClient(
                 authentication.getAuthorizedClientRegistrationId(), authentication.getName());
