@@ -18,7 +18,7 @@
                 <input type="text" class="form-control" id="displayName" v-model="appDetail.displayName" required/>
             </div>
             <div class="form-group">
-                <label for="resourceIds">resourceIds</label>
+                <label for="resourceIds">resourceIds (null or 'resource-server-rest-api')</label>
                 <input type="text" class="form-control" id="resourceIds" v-model="appDetail.resourceIds"/>
             </div>
             <div class="form-group">
@@ -127,9 +127,6 @@
                 this.errors = [];
                 if (this.appDetail.clientId == null || this.appDetail.clientId == ""){
                     this.errors.push("clientId cannot be empty");
-                }
-                if (this.appDetail.resourceIds == null || this.appDetail.resourceIds == ""){
-                    this.errors.push("resourceIds cannot be empty");
                 }
                 if (this.appDetail.clientSecret == null || this.appDetail.clientSecret == ""){
                     this.errors.push("clientSecret cannot be empty");
