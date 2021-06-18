@@ -46,7 +46,7 @@
         isCollapse: true,
         menuLinks: [
           {displayName: 'Home Page', iconClass:"el-icon-s-home", routerObj: { name: 'Home' }},
-          {displayName: 'App Management', iconClass:"el-icon-mobile-phone", routerObj: { name: 'About' }},
+          {displayName: 'App Management', iconClass:"el-icon-mobile-phone", routerObj: { name: 'AppManagement' }},
           {displayName: 'User Management', iconClass:"el-icon-user-solid", routerObj: { name: 'Element' }},
         ],
         menuLinkMap: [],
