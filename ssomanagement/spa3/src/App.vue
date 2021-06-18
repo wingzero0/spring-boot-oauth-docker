@@ -1,32 +1,63 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <el-container>
+      <el-aside width="200px">
+        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+          <el-radio-button :label="false">展开</el-radio-button>
+          <el-radio-button :label="true">收起</el-radio-button>
+        </el-radio-group>
+        <el-menu default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse"  v-on:select="goto">
+          <el-menu-item :index="menuLink.routerObj.name" v-for="(menuLink, menuIndex) in menuLinks" v-bind:key="menuIndex">
+            <i class="el-icon-setting"></i>
+            <span slot="title">
+              {{ menuLink.displayName }}
+            </span>
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+      <el-container>
+        <router-view/>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+  }
 </style>
+
+<script>
+  export default {
+    data() {
+      return {
+        isCollapse: true,
+        menuLinks: [
+          {displayName: 'SSO Management', routerObj: { name: 'Home' }},
+          {displayName: 'App Management', routerObj: { name: 'About' }},
+          {displayName: 'User Management', routerObj: { name: 'Element' }},
+        ],
+        menuLinkMap: [],
+      };
+    },
+    mounted(){
+      this.menuLinks.forEach(element => {
+        this.menuLinkMap[element.routerObj.name] = element;
+      });
+    },
+    methods: {
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      goto(index){
+        console.log("path: " + index);
+        this.$router.push(this.menuLinkMap[index].routerObj);
+      },
+    }
+  }
+</script>
