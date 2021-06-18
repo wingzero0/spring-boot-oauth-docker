@@ -1,14 +1,18 @@
 <template>
   <div id="app">
     <el-container>
-      <el-aside width="200px">
-        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-          <el-radio-button :label="false">展开</el-radio-button>
-          <el-radio-button :label="true">收起</el-radio-button>
-        </el-radio-group>
+      <el-aside v-bind:width="asideWidth">
         <el-menu default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse"  v-on:select="goto">
+          <el-menu-item index="MENU"
+            class="top-menu-item"
+          >
+            <i class="el-icon-menu"></i>
+            <span slot="title">
+              MENU
+            </span>
+          </el-menu-item>
           <el-menu-item :index="menuLink.routerObj.name" v-for="(menuLink, menuIndex) in menuLinks" v-bind:key="menuIndex">
-            <i class="el-icon-setting"></i>
+            <i :class="menuLink.iconClass"></i>
             <span slot="title">
               {{ menuLink.displayName }}
             </span>
@@ -27,6 +31,12 @@
     width: 200px;
     min-height: 400px;
   }
+  /* .top-menu-item{
+    background-color: #545c64;
+    text-color: #fff;
+    active-text-color: #ffd04b;
+  } */
+            
 </style>
 
 <script>
@@ -35,9 +45,9 @@
       return {
         isCollapse: true,
         menuLinks: [
-          {displayName: 'SSO Management', routerObj: { name: 'Home' }},
-          {displayName: 'App Management', routerObj: { name: 'About' }},
-          {displayName: 'User Management', routerObj: { name: 'Element' }},
+          {displayName: 'Home Page', iconClass:"el-icon-s-home", routerObj: { name: 'Home' }},
+          {displayName: 'App Management', iconClass:"el-icon-mobile-phone", routerObj: { name: 'About' }},
+          {displayName: 'User Management', iconClass:"el-icon-user-solid", routerObj: { name: 'Element' }},
         ],
         menuLinkMap: [],
       };
@@ -47,6 +57,11 @@
         this.menuLinkMap[element.routerObj.name] = element;
       });
     },
+    computed: {
+      asideWidth: function () {
+        return this.isCollapse ? '65px' : '201px';
+      }
+    },
     methods: {
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
@@ -54,9 +69,23 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
+      toggleMenu(){
+        this.isCollapse = !this.isCollapse;
+      },
       goto(index){
         console.log("path: " + index);
-        this.$router.push(this.menuLinkMap[index].routerObj);
+        if (index == "MENU"){
+          this.toggleMenu();
+        } else {
+          this.$router.push(this.menuLinkMap[index].routerObj).catch(err => {
+            if (
+              err.name !== 'NavigationDuplicated' &&
+              !err.message.includes('Avoided redundant navigation to current location')
+            ) {
+              throw err;
+            }
+          });
+        }
       },
     }
   }
