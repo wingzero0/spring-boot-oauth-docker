@@ -47,7 +47,7 @@
   export default {
     data() {
       return {
-        isCollapse: true,
+        isCollapse: false,
         menuLinks: [
           {displayName: 'Home Page', iconClass:"el-icon-s-home", routerObj: { name: 'Home' }},
           {displayName: 'App Management', iconClass:"el-icon-mobile-phone", routerObj: { name: 'AppManagement' }},
