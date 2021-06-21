@@ -16,6 +16,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AppManagement.vue')
   },
   {
+    path: '/appDetailForm/:clientId',
+    name: 'appDetailForm',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AppDetailForm.vue'),
+    props: {
+      app: null
+    },
+  },
+  {
     path: '/element',
     name: 'Element',
     // route level code-splitting

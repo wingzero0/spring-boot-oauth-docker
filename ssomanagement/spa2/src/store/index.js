@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
+const webRoot = process.env.VUE_APP_WEB_ROOT;
 
 export default new Vuex.Store({
   state: {
@@ -37,12 +38,12 @@ export default new Vuex.Store({
         };
         initConfig.headers['Accept'] = 'application/json';
         initConfig.headers['Content-Type'] = 'application/json';
-        payload.http.get('api/csrf-token', initConfig)
+        payload.http.get(webRoot + 'api/csrf-token', initConfig)
           .then(function (response) {
             console.log(response);
             initConfig.headers[response.data.csrf_header] = response.data.csrf_token;
             commit('updateAxiosConfig', initConfig);
-            payload.http.get('api/loginInfo', initConfig)
+            payload.http.get(webRoot + 'api/loginInfo', initConfig)
               .then(function (response) {
                 console.log(response);
                 commit('updateLoginInfo', response.data);

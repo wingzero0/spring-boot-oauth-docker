@@ -20,7 +20,9 @@
         </el-menu>
       </el-aside>
       <el-container>
-        <router-view/>
+        <div class="right-side">
+          <router-view/>
+        </div>
       </el-container>
     </el-container>
   </div>
@@ -29,13 +31,15 @@
 <style>
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
-    min-height: 400px;
+    min-height: 800px;
   }
-  /* .top-menu-item{
-    background-color: #545c64;
-    text-color: #fff;
-    active-text-color: #ffd04b;
-  } */
+  .el-menu-vertical-demo.el-menu--collapse {
+    /* width: 200px; */
+    min-height: 800px;
+  }
+  .right-side{
+    padding-left: 10px;
+  }
             
 </style>
 
