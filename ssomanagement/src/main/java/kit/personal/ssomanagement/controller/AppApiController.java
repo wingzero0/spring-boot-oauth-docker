@@ -86,6 +86,12 @@ public class AppApiController {
 		return app;
 	}
 
+	@GetMapping(value = "/app/{clientId}/role", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<AppUserRole> getAppRole(@PathVariable(value = "clientId") String clientId) {
+		return appUserRoleRepository.findAllByAppId(clientId);
+	}
+
 	@PostMapping( value = "/app", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public App createAppList(

@@ -6,7 +6,7 @@
             </el-col>
         </el-row>
         <hr/>
-        <router-link :to='{name:"appDetailForm", params:{clientId : "new", appName: "draft" }}'>
+        <router-link :to='{name:"appDetailForm", params:{clientId : "new"}}'>
             <i class="el-icon-circle-plus"></i>Add
         </router-link>
         <hr/>
@@ -103,10 +103,10 @@ export default {
             this.$store.commit('updateAppName', appName);
         },
         edit(app){
-            this.$router.push({name:"appDetailForm", params:{clientId : app.clientId, appName: app.displayName }});
+            this.$router.push({name:"appDetailForm", params:{clientId : app.clientId }});
         },
         role(app){
-            this.$router.push({name:"appRoleList", params:{appId : app.clientId, appName: app.displayName }});
+            this.$router.push({name:"appRoleManagement", params:{appId : app.clientId, appName:app.displayName }});
         },
     },
     watch:{

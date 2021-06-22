@@ -21,16 +21,16 @@
             </el-form-item>
             <el-form-item label="clientSecret" prop="clientSecret" required>
                 <el-input type="password" v-model="appDetail.clientSecret" disabled></el-input>
-                <a v-if="appDetail.clientSecret == null || appDetail.clientSecret == ''" href="#regen" v-on:click="(event) => {generatePassword(event, 32);}">
-                    generate
-                </a>
-                <a v-else href="#regen" v-on:click="(event) => {generatePassword(event, 32);}">
-                    reset
-                </a>
                 <div v-show="showClientSecret">
                     new clientSecret will be saved : {{appDetail.clientSecret}}
                 </div>
             </el-form-item>
+            <el-button type="primary" v-if="appDetail.clientSecret == null || appDetail.clientSecret == ''" href="#regen" v-on:click="(event) => {generatePassword(event, 32);}">
+                generate
+            </el-button>
+            <el-button type="primary" v-else href="#regen" v-on:click="(event) => {generatePassword(event, 32);}">
+                reset
+            </el-button>
             <el-form-item label="scope" prop="scope" required>
                 <el-input v-model="appDetail.scope"></el-input>
                 <small>comma seperate, Supported value: read,full_user_list,user_management</small>
@@ -96,9 +96,6 @@
             };
         },
         computed: {
-            appName: function(){
-                return this.$route.params.appName;
-            }
         },
         mounted: function(){
             this.axiosConfig = this.$store.state.axiosConfig;

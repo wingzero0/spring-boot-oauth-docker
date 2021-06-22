@@ -19,9 +19,18 @@ const routes = [
     path: '/appDetailForm/:clientId',
     name: 'appDetailForm',
     component: () => import(/* webpackChunkName: "about" */ '../views/AppDetailForm.vue'),
-    props: {
-      app: null
-    },
+  },
+  {
+    path: '/appRoleManagement/:appId/:appName',
+    name: 'appRoleManagement',
+    component: () => import('../views/AppRoleManagement.vue'),
+    props: true,
+  },
+  {
+    path: '/appRoleForm/:appId/:appName/:appRoleId',
+    name: 'appRoleForm',
+    component: () => import('../views/AppRoleForm.vue'),
+    props: true,
   },
   {
     path: '/element',
