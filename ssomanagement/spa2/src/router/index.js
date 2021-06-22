@@ -27,12 +27,6 @@ const routes = [
     props: true,
   },
   {
-    path: '/appRoleForm/:appId/:appName/:appRoleId',
-    name: 'appRoleForm',
-    component: () => import('../views/AppRoleForm.vue'),
-    props: true,
-  },
-  {
     path: '/element',
     name: 'Element',
     // route level code-splitting

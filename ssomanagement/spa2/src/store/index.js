@@ -15,6 +15,7 @@ export default new Vuex.Store({
       grantedAuthorities: [],
     },
     usernameMap: {},
+    usernameList: [],
     fetched: false,
   },
   mutations: {
@@ -30,6 +31,7 @@ export default new Vuex.Store({
       state.fetched = true;
     },
     updateUsernameMap(state, data) {
+      state.usernameList = data;
       state.usernameMap = [],
       data.forEach(e => {
         state.usernameMap[e.username] = e;

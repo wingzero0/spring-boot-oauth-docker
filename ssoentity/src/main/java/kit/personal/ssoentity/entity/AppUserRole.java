@@ -1,10 +1,14 @@
 package kit.personal.ssoentity.entity;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.math.BigInteger;
 import java.util.Date;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AppUserRole {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

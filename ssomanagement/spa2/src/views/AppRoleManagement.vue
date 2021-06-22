@@ -14,9 +14,9 @@
             </el-col>
         </el-row>
         <hr/>
-        <router-link v-bind:to="{ name: 'appRoleForm', params: {appId: $route.params.appId, appName: appName, appRoleId:'new'} } ">
-            <i class="el-icon-circle-plus"></i>Add
-        </router-link>
+        <el-button type="primary" icon="el-icon-plus" v-on:click="addAppUserRole">
+            Add
+        </el-button>
         <hr/>
         <el-input v-model="searchWords"
             v-on:change="search" size="mini" placeholder="filter"
@@ -70,11 +70,20 @@
                 </span>
             </el-dialog>
         </div>
+        <div>
+            <app-role-form
+                :dialogVisible="appRoleFormShow"
+                @close="closeAppRoleFormShow"
+                :propAppUserRole="appUserRole"
+            ></app-role-form>
+        </div>
     </div>
 </template>
 <style>
 </style>
 <script>
+    import AppRoleForm from "@/components/AppRoleForm";
+    import AppUserRole from "@/model/AppUserRole"
     export default {
         name: 'AppRoleManagement',
         props:{
@@ -86,21 +95,13 @@
                 appId : null,
                 appUserRoleList : [],
                 appUserRoleFilteredList : [],
-                appUserMap : {},
-                axiosConfig: {
-                    headers : {
-                    },
-                    data:{
-                    }
-                },
+                axiosConfig: {},
                 loginInfo: {},
                 deleteMsg: null,
                 deleteId: null,
                 dialogVisible: false,
-                filter:{
-                    username:"",
-                    appRole:"",
-                },
+                appRoleFormShow: false,
+                appUserRole : {},
                 searchWords: "",
                 usernameMap: {},
                 webApi: process.env.VUE_APP_WEB_ROOT,
@@ -111,6 +112,7 @@
             this.loginInfo = this.$store.state.loginInfo;
             this.appId = this.$route.params.appId;
             this.usernameMap = this.$store.state.usernameMap;
+            this.appUserRole = new AppUserRole();
             this.fetchRecord();
         },
         computed: {
@@ -162,15 +164,25 @@
             },
             edit(appUserRole){
                 console.log(appUserRole);
-                this.$router.push({name:"appRoleForm", params: {appId: this.$route.params.appId, appName: this.appName, appRoleId:appUserRole.id} });
+                this.appUserRole = appUserRole;
+                this.appRoleFormShow = true;
             },
             showPopup: function(username, role, id){
                 this.deleteMsg = 'Are you sure to delete record:' + username + ' ' + role;
                 this.deleteId = id;
                 this.dialogVisible = true;
             },
+            closeAppRoleFormShow(){
+                this.appRoleFormShow = false;
+            },
+            addAppUserRole(){
+                this.appUserRole = new AppUserRole();
+                this.appUserRole.appId = this.appId;
+                this.appRoleFormShow = true;
+            },
         },
         components: {
+            "app-role-form" : AppRoleForm,
         },
         watch:{
             '$route' (){
