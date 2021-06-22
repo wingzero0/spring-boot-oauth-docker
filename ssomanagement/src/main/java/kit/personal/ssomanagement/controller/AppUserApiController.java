@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigInteger;
 import java.security.Principal;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +39,12 @@ public class AppUserApiController {
 
 		Page<AppUser> appUsers = appUserRepo.findAllBy(PageRequest.of(pageNum, limitNum, sort));
 		return appUsers;
+	}
+
+	@GetMapping(value = "/appUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Iterable<AppUser> getAllAppUser() {
+		return appUserRepo.findAll();
 	}
 
 	@RequestMapping( value = "/appUser", method = {RequestMethod.POST, RequestMethod.PUT}, produces = MediaType.APPLICATION_JSON_VALUE)

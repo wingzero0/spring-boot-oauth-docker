@@ -14,6 +14,7 @@ export default new Vuex.Store({
       name: null,
       grantedAuthorities: [],
     },
+    usernameMap: {},
     fetched: false,
   },
   mutations: {
@@ -26,6 +27,13 @@ export default new Vuex.Store({
       console.log("in store updateLoginInfo");
       console.log(data);
       state.loginInfo = data;
+      state.fetched = true;
+    },
+    updateUsernameMap(state, data) {
+      state.usernameMap = [],
+      data.forEach(e => {
+        state.usernameMap[e.username] = e;
+      });
       state.fetched = true;
     },
   },
@@ -43,15 +51,22 @@ export default new Vuex.Store({
             console.log(response);
             initConfig.headers[response.data.csrf_header] = response.data.csrf_token;
             commit('updateAxiosConfig', initConfig);
-            payload.http.get(webRoot + 'api/loginInfo', initConfig)
+            let loginInfoRequest = payload.http.get(webRoot + 'api/loginInfo', initConfig)
               .then(function (response) {
                 console.log(response);
                 commit('updateLoginInfo', response.data);
-                resolve();
               }).catch(function (error) {
                 console.log(error);
-                reject(error);
               });
+            let allUsersRequest = payload.http.get(webRoot + 'api/appUsers', initConfig)
+              .then(response=>{
+                commit('updateUsernameMap', response.data);
+              });
+            Promise.all([loginInfoRequest, allUsersRequest]).then(()=>{
+              resolve();
+            }).catch(error=>{
+              reject(error);
+            });
           })
           .catch(function (error) {
             console.log(error);

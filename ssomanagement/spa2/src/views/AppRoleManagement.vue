@@ -18,7 +18,10 @@
             <i class="el-icon-circle-plus"></i>Add
         </router-link>
         <hr/>
-        <el-table :data="appUserRoleList">
+        <el-input v-model="searchWords"
+            v-on:change="search" size="mini" placeholder="filter"
+        ></el-input>
+        <el-table :data="appUserRoleFilteredList" :default-sort="{prop:'username', order: 'descending'}">
             <el-table-column
                 fixed="left"
                 label="Action"
@@ -36,46 +39,25 @@
                 prop="username"
                 label="Username"
                 width="200"
+                sortable
             >
-                <template slot="header" slot-scope="scope">
-                    <div v-if="false">{{scope.column}} work around that make el-input work</div>
-                    <span>Username</span>
-                    <el-input v-model="filter.username" 
-                        v-on:change="search" size="mini" placeholder="filter"
-                    ></el-input>
-                </template>
             </el-table-column>
             <el-table-column
                 prop="displayName"
                 label="User Display Name"
                 width="200"
+                sortable
             >
             </el-table-column>
             <el-table-column
                 prop="appRole"
                 label="App Role"
                 width="200"
+                sortable
             >
-                <template slot="header" slot-scope="scope">
-                    <div v-if="false">{{scope.column}} work around that make el-input work</div>
-                    <span>Role</span>
-                    <el-input v-model="filter.appRole"
-                        v-on:change="search" size="mini" placeholder="filter"
-                    ></el-input>
-                </template>
             </el-table-column>
         </el-table>
         <hr/>
-        <div class="block">
-            <el-pagination
-                layout="prev, pager, next"
-                :current-page.sync="pageNumber"
-                :count="totalElements"
-                :page-count="totalPages"
-                @current-change="currentChange"
-                >
-            </el-pagination>
-        </div>
         <div>
             <el-dialog
                 title="Delete Confirm"
@@ -103,6 +85,7 @@
             return{
                 appId : null,
                 appUserRoleList : [],
+                appUserRoleFilteredList : [],
                 appUserMap : {},
                 axiosConfig: {
                     headers : {
@@ -114,17 +97,12 @@
                 deleteMsg: null,
                 deleteId: null,
                 dialogVisible: false,
-                pageNumber: 1,
-                pageSize: 10,
-                totalPages : 1,
-                totalElements: 10,
                 filter:{
                     username:"",
                     appRole:"",
                 },
-                // app : {
-                //     displayName: null,
-                // },
+                searchWords: "",
+                usernameMap: {},
                 webApi: process.env.VUE_APP_WEB_ROOT,
             }
         },
@@ -132,42 +110,37 @@
             this.axiosConfig = this.$store.state.axiosConfig;
             this.loginInfo = this.$store.state.loginInfo;
             this.appId = this.$route.params.appId;
-            this.fetchRecord(this.pageNumber - 1);
+            this.usernameMap = this.$store.state.usernameMap;
+            this.fetchRecord();
         },
         computed: {
         },
         methods: {
             search(){
-                this.pageNumber = 1;
-                this.fetchRecord(this.pageNumber - 1);
+                this.appUserRoleFilteredList = this.appUserRoleList.filter(appUserRole => {
+                    if (this.searchWords != ""){
+                        return appUserRole.displayName.includes(this.searchWords) || 
+                            appUserRole.username.includes(this.searchWords) ||
+                            appUserRole.appRole.includes(this.searchWords);
+                    } else {
+                        return true;
+                    }
+                });
             },
-            currentChange(pageNumber){
-                console.log("event: "+ pageNumber);
-                this.fetchRecord(pageNumber - 1);
-            },
-            fetchRecord(pageNumber){
-                this.$http.get(this.webApi + "api/role?appId=" + this.appId + '&pageNumber=' + pageNumber + '&pageSize=' + this.pageSize 
-                    + "&username=" + this.filter.username + "&appRole=" + this.filter.appRole, this.axiosConfig)
+            fetchRecord(){
+                this.$http.get(this.webApi + "api/app/" + this.appId + "/role", this.axiosConfig)
                     .then((response) => {
                         console.log(response);
-                        this.appUserRoleList = response.data.content;
-                        this.totalPages = response.data.totalPages;
-                        this.totalElements = response.data.totalElements;
-                        let usernameRequests = this.appUserRoleList.map((appUserRole)=>{
-                            this.appUserMap[appUserRole.username] = { displayName : null };
-                            appUserRole.displayName = "loading";
-                            return this.$http.get(this.webApi + "api/appUserByUsername/" + appUserRole.username, this.axiosConfig)
-                                .then((response) => {
-                                    this.appUserMap[appUserRole.username] = response.data;
-                                    appUserRole.displayName = response.data.displayName;
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                });
+                        this.appUserRoleList = response.data;
+                        this.appUserRoleList.forEach((appUserRole)=>{
+                            if (this.usernameMap[appUserRole.username] != null){
+                                appUserRole.displayName = this.usernameMap[appUserRole.username].displayName;
+                            } else {
+                                appUserRole.displayName = "ERROR";
+                            }
                         });
-                        return Promise.all(usernameRequests).then(()=>{
-                            this.appUserRoleList = this.appUserRoleList.map(x=>x); // force update
-                        });
+
+                        this.appUserRoleFilteredList = this.appUserRoleList;
                     })
                     .catch((error) => {
                         console.log(error);
