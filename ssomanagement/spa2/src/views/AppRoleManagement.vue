@@ -19,7 +19,7 @@
         </el-button>
         <hr/>
         <el-input v-model="searchWords"
-            v-on:change="search" size="mini" placeholder="filter"
+            v-on:change="search" v-on:keyup.enter="search" size="mini" placeholder="filter"
         ></el-input>
         <el-table :data="appUserRoleFilteredList" :default-sort="{prop:'username', order: 'descending'}">
             <el-table-column
@@ -73,7 +73,7 @@
         <div>
             <app-role-form
                 :dialogVisible="appRoleFormShow"
-                @close="closeAppRoleFormShow"
+                @closeAppRoleForm="closeAppRoleFormShow"
                 :propAppUserRole="appUserRole"
             ></app-role-form>
         </div>
@@ -121,16 +121,16 @@
             search(){
                 this.appUserRoleFilteredList = this.appUserRoleList.filter(appUserRole => {
                     if (this.searchWords != ""){
-                        return appUserRole.displayName.includes(this.searchWords) || 
-                            appUserRole.username.includes(this.searchWords) ||
-                            appUserRole.appRole.includes(this.searchWords);
+                        return (appUserRole.displayName !=null && appUserRole.displayName.includes(this.searchWords)) || 
+                            (appUserRole.username !=null && appUserRole.username.includes(this.searchWords)) ||
+                            (appUserRole.appRole !=null && appUserRole.appRole.includes(this.searchWords));
                     } else {
                         return true;
                     }
                 });
             },
             fetchRecord(){
-                this.$http.get(this.webApi + "api/app/" + this.appId + "/role", this.axiosConfig)
+                return this.$http.get(this.webApi + "api/app/" + this.appId + "/role", this.axiosConfig)
                     .then((response) => {
                         console.log(response);
                         this.appUserRoleList = response.data;
@@ -141,7 +141,6 @@
                                 appUserRole.displayName = "ERROR";
                             }
                         });
-
                         this.appUserRoleFilteredList = this.appUserRoleList;
                     })
                     .catch((error) => {
@@ -172,7 +171,10 @@
                 this.deleteId = id;
                 this.dialogVisible = true;
             },
-            closeAppRoleFormShow(){
+            closeAppRoleFormShow(refresh){
+                if (refresh === true){
+                    this.fetchRecord().then(()=>this.search());
+                }
                 this.appRoleFormShow = false;
             },
             addAppUserRole(){

@@ -4,7 +4,7 @@
             title="App Role"
             :visible.sync="dialogVisible"
             :close-on-press-escape="true"
-            :before-close="close"
+            :before-close="()=>{close(true);}"
             width="600px">
             <el-form ref="appRoleForm" :model="appUserRole" :rules="rules">
                 <el-form-item label="username" prop="username" required>
@@ -25,7 +25,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="close">Cancel</el-button>
+                <el-button @click="()=>{close(true);}">Cancel</el-button>
                 <el-button type="primary" @click="save">Save</el-button>
             </span>
         </el-dialog>
@@ -57,6 +57,7 @@
                 },
                 usernameList:[],
                 filteredUsernameList:[],
+                axiosConfig: {},
                 webApi: process.env.VUE_APP_WEB_ROOT,
             }
         },
@@ -66,10 +67,11 @@
             this.appUserRole = this.propAppUserRole;
             this.usernameList = this.$store.state.usernameList;
             this.filteredUsernameList = this.usernameList;
+            this.axiosConfig = this.$store.state.axiosConfig;
         },
         methods: {
-            close(){
-                this.$emit("close");
+            close(refresh){
+                this.$emit("closeAppRoleForm", refresh);
             },
             save: function(event){
                 event.preventDefault();
@@ -78,7 +80,7 @@
                         this.$http.post(this.webApi + 'api/role/', this.appUserRole, this.axiosConfig)
                             .then((response) => {
                                 console.log(response.data);
-                                this.close();
+                                this.close(true);
                             })
                             .catch((error) => {
                                 console.log(error);
@@ -91,7 +93,7 @@
             },
             back(event){
                 event.preventDefault();
-                this.close();
+                this.close(false);
             },
             filterUsername(value){
                 console.log("filter username:" + value);
