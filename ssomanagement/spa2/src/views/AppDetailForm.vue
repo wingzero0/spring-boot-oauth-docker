@@ -33,7 +33,11 @@
             </el-button>
             <el-form-item label="scope" prop="scope" required>
                 <el-input v-model="appDetail.scope"></el-input>
-                <small>comma seperate, Supported value: read,full_user_list,user_management</small>
+                <small>comma seperate, Supported value: read,write,full_user_list,user_management</small>
+            </el-form-item>
+            <el-form-item label="autoapprove" prop="autoapprove" required>
+                <el-input v-model="appDetail.autoapprove"></el-input>
+                <small>comma seperate, Supported value: read,write,full_user_list,user_management</small>
             </el-form-item>
             <el-form-item label="authorizedGrantTypes" prop="authorizedGrantTypes" required>
                 <el-input v-model="appDetail.authorizedGrantTypes"></el-input>

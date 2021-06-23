@@ -8,7 +8,7 @@
             width="600px">
             <el-form ref="appUserForm" :model="appUser" :rules="rules">
                 <el-form-item label="Username" prop="username" required>
-                    <el-input v-model="appUser.username">
+                    <el-input v-model="appUser.username" :disabled="appUser.id != null">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="Display Name" prop="displayName">

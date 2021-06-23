@@ -3,6 +3,9 @@ module.exports = {
         proxy: {
             '^/api': {
                 target: 'http://compiler:8082/ssomanagement/',
+            },
+            '^/selfServiceApi': {
+                target: 'http://compiler:8082/ssomanagement/',
             }
         }
         

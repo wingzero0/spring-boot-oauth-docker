@@ -11,7 +11,10 @@
               MENU
             </span>
           </el-menu-item>
-          <el-menu-item :index="menuLink.routerObj.name" v-for="(menuLink, menuIndex) in menuLinks" v-bind:key="menuIndex">
+          <el-menu-item :index="menuLink.routerObj.name"
+            v-for="(menuLink, menuIndex) in menuFitleredLinks"
+            v-bind:key="menuIndex"
+          >
             <i :class="menuLink.iconClass"></i>
             <span slot="title">
               {{ menuLink.displayName }}
@@ -49,17 +52,36 @@
       return {
         isCollapse: false,
         menuLinks: [
-          {displayName: 'Home Page', iconClass:"el-icon-s-home", routerObj: { name: 'Home' }},
-          {displayName: 'App Management', iconClass:"el-icon-mobile-phone", routerObj: { name: 'AppManagement' }},
-          {displayName: 'User Management', iconClass:"el-icon-user-solid", routerObj: { name: 'userManagement' }},
+          {displayName: 'App Management', iconClass:"el-icon-mobile-phone", routerObj: { name: 'AppManagement' }, permission: "ROLE_USER",},
+          {displayName: 'User Management', iconClass:"el-icon-user-solid", routerObj: { name: 'userManagement' }, permission: "ROLE_ADMIN",},
+          {displayName: 'User Self Service', iconClass:"el-icon-user-solid", routerObj: { name: 'userSelfService' }, permission: null,},
         ],
+        menuFitleredLinks: [],
         menuLinkMap: [],
+        loginInfo:{
+          grantedAuthorities: [],
+        },
       };
     },
     mounted(){
-      this.menuLinks.forEach(element => {
-        this.menuLinkMap[element.routerObj.name] = element;
-      });
+      if (this.$store.state.fetched === false){
+        this.$store.dispatch('getToken', { 'http': this.$http }).then(() => {
+          this.loginInfo = this.$store.state.loginInfo;
+          this.menuLinks.forEach(element => {
+            this.menuLinkMap[element.routerObj.name] = element;
+          });
+          this.menuFitleredLinks = this.menuLinks.filter((menuLink)=>{
+            if (menuLink.permission == null) {
+              return true;
+            } else {
+              let matchedAuthority = this.loginInfo.grantedAuthorities.filter(grantedAuthority=>{
+                return grantedAuthority.authority == menuLink.permission;
+              });
+              return matchedAuthority.length > 0;
+            }
+          });
+        });
+      }
     },
     computed: {
       asideWidth: function () {
