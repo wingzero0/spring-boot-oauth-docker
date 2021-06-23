@@ -17,13 +17,10 @@
             <el-table-column
                 fixed="left"
                 label="Action"
-                width="150">
+                width="100">
                 <template slot-scope="scope">
                     <el-button @click="edit(scope.row)" type="text" size="small">
                         <i class="el-icon-edit"></i> Edit
-                    </el-button>
-                    <el-button @click="deleteConfirm(scope.row)" type="text" size="small">
-                        <i class="el-icon-s-custom"></i> Delete
                     </el-button>
                 </template>
             </el-table-column>
@@ -62,11 +59,18 @@
             >
             </app-user-form>
         </div>
+        <delete-confirm-dialog
+            :propDialogVisible="deleteConfirmShow"
+            :propDeleteMsg="deleteMsg"
+            @cancelDelete="cancelDeleteAppUser"
+            @confirmDelete="confirmDeleteAppUser"
+        ></delete-confirm-dialog>
     </div>
 </template>
 
 <script>
     import AppUserForm from "@/components/AppUserForm";
+    import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
     import AppUser from "@/model/AppUser";
     export default {
         name: "UserManagement",
@@ -76,6 +80,8 @@
                 appUserFilteredList: [],
                 appUser:{},
                 appUserFormShow: false,
+                deleteConfirmShow: false,
+                deleteMsg: "",
                 searchWords: "",
                 axiosConfig: {},
                 webApi: process.env.VUE_APP_WEB_ROOT,
@@ -124,9 +130,21 @@
                 this.appUser = new AppUser();
                 this.appUserFormShow = true;
             },
+            showDeleteAppUserDialog(appUser){
+                this.deleteConfirmShow = true;
+                this.deleteMsg = 'Are you sure to delete record:' + appUser.username;
+            },
+            cancelDeleteAppUser(){
+                this.deleteConfirmShow = false;
+            },
+            confirmDeleteAppUser(){
+                console.log("not implemented from backend");
+                this.deleteConfirmShow = false;
+            },
         },
         components: {
             "app-user-form" : AppUserForm,
+            "delete-confirm-dialog": DeleteConfirmDialog
         },
     }
 </script>

@@ -7,7 +7,7 @@
             :before-close="()=>{close(true);}"
             width="600px">
             <el-form ref="appRoleForm" :model="appUserRole" :rules="rules">
-                <el-form-item label="username" prop="username" required>
+                <el-form-item label="Username" prop="username" required>
                     <el-select v-model="appUserRole.username" 
                         filterable placeholder="username"
                         :filter-method="filterUsername"
@@ -20,7 +20,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="appRole" prop="appRole" required>
+                <el-form-item label="App Role" prop="appRole" required>
                     <el-input v-model="appUserRole.appRole"></el-input>
                 </el-form-item>
             </el-form>
@@ -64,7 +64,7 @@
         computed: {
         },
         mounted(){
-            this.appUserRole = this.propAppUserRole;
+            this.appUserRole = Object.assign({}, this.propAppUserRole);
             this.usernameList = this.$store.state.usernameList;
             this.filteredUsernameList = this.usernameList;
             this.axiosConfig = this.$store.state.axiosConfig;
@@ -117,7 +117,7 @@
         },
         watch:{
             'propAppUserRole'(newAppUserRole){
-                this.appUserRole = newAppUserRole;
+                this.appUserRole = Object.assign({}, newAppUserRole);
             }
         },
     }
