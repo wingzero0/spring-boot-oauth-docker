@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/**").hasAnyRole("ADMIN", "APP_ADMIN")
                     .antMatchers("/selfServiceApi/**").hasRole("USER")
                     .antMatchers("/loginPage").permitAll()
+                    .antMatchers("/js/about**.js").permitAll()
                     .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
